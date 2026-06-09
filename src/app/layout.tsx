@@ -8,9 +8,11 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Reading Tracker - 追蹤你的閱讀旅程",
-  description: "個人閱讀追蹤與筆記管理工具，記錄每一本書、每一個想法。",
-  keywords: ["閱讀", "書單", "筆記", "閱讀追蹤"],
+  title: "BookMind - 書籍學習筆記",
+  description: "掃描 ISBN 或搜尋書籍，記錄摘錄與心得。無需帳號即可立即使用。",
+  keywords: ["閱讀", "書單", "筆記", "ISBN", "學習"],
+  manifest: "/manifest.json",
+  themeColor: "#1e3a5f",
 };
 
 export default function RootLayout({

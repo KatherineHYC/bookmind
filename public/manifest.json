@@ -1,0 +1,22 @@
+{
+  "name": "BookMind - 書籍學習筆記",
+  "short_name": "BookMind",
+  "description": "掃描 ISBN，記錄你的閱讀與筆記",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F4EFE6",
+  "theme_color": "#1E3A5F",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
