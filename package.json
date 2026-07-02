@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "notes:install": "node scripts/install-private-notes.mjs",
+    "notes:strip": "node scripts/strip-private-notes.mjs",
+    "notes:check": "node scripts/check-private-notes-staged.mjs"
   },
   "dependencies": {
     "@ducanh2912/next-pwa": "^10.2.9",
