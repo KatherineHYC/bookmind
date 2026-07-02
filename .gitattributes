@@ -1,0 +1,10 @@
+*.js filter=private-notes
+*.jsx filter=private-notes
+*.ts filter=private-notes
+*.tsx filter=private-notes
+*.css filter=private-notes
+*.scss filter=private-notes
+*.sass filter=private-notes
+*.json filter=private-notes
+*.mjs filter=private-notes
+*.cjs filter=private-notes
