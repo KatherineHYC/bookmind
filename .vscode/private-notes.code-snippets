@@ -1,7 +1,7 @@
 {
   "Private Explain Block": {
     "scope": "typescript,typescriptreact,javascript,javascriptreact",
-    "prefix": "explain",
+    "prefix": "@e",
     "body": [
       "/* ============================================================================",
       " * @EXPLAIN",
@@ -9,13 +9,13 @@
       " * ${1:請輸入說明}",
       " *",
       " * ============================================================================",
-      " */"
+      " */",
     ],
-    "description": "Insert a private @EXPLAIN learning note block"
+    "description": "Insert a private @EXPLAIN learning note block",
   },
   "Private Todo Block": {
     "scope": "typescript,typescriptreact,javascript,javascriptreact",
-    "prefix": "todo",
+    "prefix": "@t",
     "body": [
       "/* ============================================================================",
       " * @TODO",
@@ -23,8 +23,20 @@
       " * ${1:請輸入待改善事項}",
       " *",
       " * ============================================================================",
-      " */"
+      " */",
     ],
-    "description": "Insert a private @TODO learning note block"
-  }
+    "description": "Insert a private @TODO learning note block",
+  },
+  "Private Why Line": {
+    "scope": "typescript,typescriptreact,javascript,javascriptreact",
+    "prefix": "@w",
+    "body": [" @WHY"],
+    "description": "Insert a private @WHY learning note line",
+  },
+  "Private Note Line": {
+    "scope": "typescript,typescriptreact,javascript,javascriptreact",
+    "prefix": "@n",
+    "body": [" @NOTE"],
+    "description": "Insert a private @NOTE learning note line",
+  },
 }
