@@ -41,4 +41,6 @@ yarn-error.log*
 next-env.d.ts
 
 .vscode/*
-!.vscode/private-notes.code-snippets
+scripts/strip-private-notes.mjs
+scripts/install-private-notes.mjs
+scripts/check-private-notes-staged.mjs
