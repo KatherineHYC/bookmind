@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
@@ -12,6 +12,9 @@ export const metadata: Metadata = {
   description: "掃描 ISBN 或搜尋書籍，記錄摘錄與心得。無需帳號即可立即使用。",
   keywords: ["閱讀", "書單", "筆記", "ISBN", "學習"],
   manifest: "/manifest.json",
+};
+
+export const viewport: Viewport = {
   themeColor: "#1e3a5f",
 };
 
