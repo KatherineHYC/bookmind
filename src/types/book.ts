@@ -49,3 +49,27 @@ export interface UserBook {
   createdAt: string;
   updatedAt: string;
 }
+
+// Supabase books 資料表的實際欄位（DB 原始格式）
+export interface BookRow {
+  id: string;
+  created_at: string;
+  user_id: string;
+  google_books_id: string;
+  title: string;
+  authors: string;
+  cover_url: string | null;
+  status: ReadingStatus;
+  updated_at: string;
+}
+
+// 畫面顯示書單用的型別（authors 還原成陣列）
+export interface BookListItem {
+  id: string;
+  googleBooksId: string;
+  title: string;
+  authors: string[];
+  coverUrl: string | null;
+  status: ReadingStatus;
+  createdAt: string;
+}
