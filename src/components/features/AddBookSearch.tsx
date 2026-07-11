@@ -3,6 +3,7 @@
 import { useState } from "react";
 import IsbnScanner from "./IsbnScanner";
 import { searchBooks, searchByISBN } from "@/lib/google-books";
+import { addBook } from "@/app/actions/books";
 import type { Book } from "@/types/book";
 
 type Mode = "idle" | "scanning";
@@ -13,6 +14,7 @@ export default function AddBookSearch() {
   const [results, setResults] = useState<Book[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [addingId, setAddingId] = useState<string | null>(null);
 
   async function handleScanSuccess(isbn: string) {
     setMode("idle");
@@ -31,7 +33,7 @@ export default function AddBookSearch() {
 
   // 手動輸入關鍵字搜尋
   async function handleManualSearch(e: React.FormEvent) {
-    e.preventDefault(); // 阻止表單預設的整頁刷新行為
+    e.preventDefault();
     if (!query.trim()) return;
     setLoading(true);
     setError(null);
@@ -43,6 +45,27 @@ export default function AddBookSearch() {
     } finally {
       setLoading(false);
     }
+  }
+
+  // 點選搜尋結果，加入自己的書單
+  async function handleAdd(book: Book) {
+    setAddingId(book.googleBooksId);
+    setError(null);
+    const result = await addBook({
+      googleBooksId: book.googleBooksId,
+      title: book.title,
+      authors: book.authors,
+      coverUrl: book.coverUrl,
+    });
+    setAddingId(null);
+    if (result?.error) {
+      setError(result.error);
+      return;
+    }
+    // 加入成功後從搜尋結果移除，避免重複加入
+    setResults((prev) =>
+      prev.filter((b) => b.googleBooksId !== book.googleBooksId),
+    );
   }
 
   return (
@@ -83,13 +106,22 @@ export default function AddBookSearch() {
         {results.map((book) => (
           <li
             key={book.isbn13 ?? book.googleBooksId}
-            className="border rounded-lg p-3 text-sm"
+            className="border rounded-lg p-3 text-sm flex items-center justify-between gap-2"
           >
-            <p className="font-medium">{book.title}</p>
-            {/* @NOTE authors 是陣列，可能是空陣列，用 join 顯示比較保險 */}
-            <p className="text-gray-500 text-xs">
-              {book.authors.join("、") || "作者不詳"}
-            </p>
+            <div className="min-w-0">
+              <p className="font-medium truncate">{book.title}</p>
+              {/* @NOTE authors 是陣列，可能是空陣列，用 join 顯示比較保險 */}
+              <p className="text-gray-500 text-xs truncate">
+                {book.authors.join("、") || "作者不詳"}
+              </p>
+            </div>
+            <button
+              onClick={() => handleAdd(book)}
+              disabled={addingId === book.googleBooksId}
+              className="px-3 py-1.5 bg-primary text-white rounded-lg text-xs shrink-0"
+            >
+              {addingId === book.googleBooksId ? "加入中..." : "+ 加入書單"}
+            </button>
           </li>
         ))}
       </ul>
