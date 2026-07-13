@@ -13,7 +13,7 @@ const addBookSchema = z.object({
   googleBooksId: z.string().min(1),
   title: z.string().min(1),
   authors: z.array(z.string()),
-  coverUrl: z.string().url().nullable(),
+  coverUrl: z.url().nullable(),
 });
 
 export type AddBookInput = z.infer<typeof addBookSchema>;
