@@ -5,42 +5,36 @@
 
 /* ===== 全域樣式 ===== */
 body {
-  background-color: rgb(249 250 251); /* gray-50 */
-  color: rgb(17 24 39); /* gray-900 */
+  background-color: var(--background);
+  color: var(--foreground);
 }
 
 /* ===== 自訂元件樣式 ===== */
-
-/* 卡片基礎樣式 */
 .card {
-  background-color: white;
-  border-radius: 0.75rem; /* rounded-xl */
-  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); /* shadow-sm */
-  border: 1px solid rgb(243 244 246); /* border-gray-100 */
+  background-color: var(--card);
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  border: 1px solid var(--border);
 }
 
-/* 頁面容器 */
 .container-page {
-  max-width: 72rem; /* max-w-6xl */
+  max-width: 72rem;
   margin-left: auto;
   margin-right: auto;
-  padding-left: 1rem; /* px-4 */
+  padding-left: 1rem;
   padding-right: 1rem;
-  padding-top: 2rem; /* py-8 */
+  padding-top: 2rem;
   padding-bottom: 2rem;
 }
 
-/* ===== 平滑捲動 ===== */
 html {
   scroll-behavior: smooth;
 }
 
-/* 隱藏捲軸但保持功能 */
 .hide-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
-
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
@@ -79,6 +73,15 @@ html {
   --color-card: var(--card);
   --color-foreground: var(--foreground);
   --color-background: var(--background);
+
+  /* BookMind 專屬：書況／筆記類型的色卡（摘錄、心得、正在閱讀、已完成、想讀） */
+  --color-status-reading: var(--status-reading);
+  --color-status-reading-bg: var(--status-reading-bg);
+  --color-status-completed: var(--status-completed);
+  --color-status-completed-bg: var(--status-completed-bg);
+  --color-status-want: var(--status-want);
+  --color-status-want-bg: var(--status-want-bg);
+
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -89,72 +92,99 @@ html {
 }
 
 :root {
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  --background: #f4efe6; /* 全站底色：首頁／書單／筆記／設定共用 */
+  --foreground: #1c1916; /* 主要文字（標題、內文） */
+
+  --card: #fefcf8; /* 書籍卡、筆記卡、設定區塊卡片底色 */
+  --card-foreground: #1c1916;
+
+  --popover: #fefcf8;
+  --popover-foreground: #1c1916;
+
+  --primary: #2c4a3d; /* 深森林綠：Logo、主要按鈕、底部導覽選中色 */
+  --primary-foreground: #fefcf8;
+
+  --secondary: #eaf4ee; /* 淺綠底：「正在閱讀」標籤、次要按鈕 */
+  --secondary-foreground: #2d6a4f;
+
+  --muted: #ede8de; /* 搜尋框、未選中頁籤底色 */
+  --muted-foreground: #6b6257; /* 次要說明文字（作者名、日期、備註） */
+
+  --accent: #f5ede0; /* 暖棕底：「已完成」標籤等強調用色 */
+  --accent-foreground: #8b5e34;
+
+  --destructive: #c24c3c; /* 「清除本機資料」等破壞性操作 */
+  --destructive-foreground: #fefcf8;
+
+  --border: #ddd5c4; /* 卡片邊框、輸入框邊框、分隔線 */
+  --input: #ddd5c4;
+  --ring: #2c4a3d; /* focus 外框色，跟主色一致 */
+
+  --chart-1: #2c4a3d;
+  --chart-2: #b85c38;
+  --chart-3: #6b7fa3;
+  --chart-4: #8b6f47;
+  --chart-5: #6b5b95;
+
+  --radius: 0.75rem; /* 卡片／按鈕圓角，比原本略大，貼近設計稿的圓潤感 */
+
+  --sidebar: #fefcf8;
+  --sidebar-foreground: #1c1916;
+  --sidebar-primary: #2c4a3d;
+  --sidebar-primary-foreground: #fefcf8;
+  --sidebar-accent: #eaf4ee;
+  --sidebar-accent-foreground: #2d6a4f;
+  --sidebar-border: #ddd5c4;
+  --sidebar-ring: #2c4a3d;
+
+  /* 書況 / 筆記類型狀態色 */
+  --status-reading: #2d6a4f;
+  --status-reading-bg: #eaf4ee;
+  --status-completed: #8b5e34;
+  --status-completed-bg: #f5ede0;
+  --status-want: #6b5b95;
+  --status-want-bg: #ede9f5;
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --background: #1c1916;
+  --foreground: #f4efe6;
+  --card: #26221d;
+  --card-foreground: #f4efe6;
+  --popover: #26221d;
+  --popover-foreground: #f4efe6;
+  --primary: #6fa98a;
+  --primary-foreground: #1c1916;
+  --secondary: #2a3b32;
+  --secondary-foreground: #9fd4b4;
+  --muted: #2e2a24;
+  --muted-foreground: #a69c8d;
+  --accent: #3a2e22;
+  --accent-foreground: #e0b98a;
+  --destructive: #e0685a;
+  --destructive-foreground: #1c1916;
+  --border: #3a342c;
+  --input: #3a342c;
+  --ring: #6fa98a;
+  --chart-1: #6fa98a;
+  --chart-2: #d98b63;
+  --chart-3: #8fa3c9;
+  --chart-4: #c4a277;
+  --chart-5: #a493c9;
+  --sidebar: #26221d;
+  --sidebar-foreground: #f4efe6;
+  --sidebar-primary: #6fa98a;
+  --sidebar-primary-foreground: #1c1916;
+  --sidebar-accent: #2a3b32;
+  --sidebar-accent-foreground: #9fd4b4;
+  --sidebar-border: #3a342c;
+  --sidebar-ring: #6fa98a;
+  --status-reading: #9fd4b4;
+  --status-reading-bg: #2a3b32;
+  --status-completed: #e0b98a;
+  --status-completed-bg: #3a2e22;
+  --status-want: #b9a9e0;
+  --status-want-bg: #34304a;
 }
 
 @layer base {
