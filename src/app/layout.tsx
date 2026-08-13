@@ -37,7 +37,12 @@ export default function RootLayout({
         <header className="flex justify-center items-center text-primary px-6 pt-8">
           <Logo />
         </header>
-        {children}
+        <main>{children}</main>
+        <footer className="bg-primary text-white">
+          <div className="max-w-3xl mx-auto px-4 py-4 text-center text-sm text-slate-200">
+            <p>Copyright © 2026 Katherine Hsu</p>
+          </div>
+        </footer>
       </body>
     </html>
   );
