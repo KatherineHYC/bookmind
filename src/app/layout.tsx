@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Logo from "@/components/layouts/Logo";
 import { Noto_Serif_TC } from "next/font/google";
 import "./globals.css";
 
@@ -33,6 +34,9 @@ export default function RootLayout({
   return (
     <html lang="zh-TW">
       <body className={`${notoSerifTC.variable} font-serif antialiased`}>
+        <header className="flex justify-center items-center text-primary px-6 pt-8">
+          <Logo />
+        </header>
         {children}
       </body>
     </html>
