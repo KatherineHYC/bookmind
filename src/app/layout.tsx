@@ -1,12 +1,19 @@
 import type { Metadata, Viewport } from "next";
-import { Noto_Serif_TC } from "next/font/google";
+import { Noto_Serif_TC, Noto_Sans_TC } from "next/font/google";
 import "./globals.css";
-
 
 const notoSerifTC = Noto_Serif_TC({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-noto-serif-tc",
+  display: "swap",
+  preload: false,
+});
+
+const notoSansTC = Noto_Sans_TC({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  variable: "--font-noto-sans-tc",
   display: "swap",
   preload: false,
 });
@@ -31,8 +38,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="zh-TW">
-      <body className={`${notoSerifTC.variable} font-serif antialiased`}>
+    <html
+      lang="zh-TW"
+      className={`${notoSerifTC.variable} ${notoSansTC.variable}`}
+    >
+      <body className="antialiased">
         <main>{children}</main>
         <footer className="bg-primary text-white">
           <div className="max-w-3xl mx-auto px-4 py-4 text-center text-sm text-slate-200">
