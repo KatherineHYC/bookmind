@@ -1,36 +1,12 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-
-@custom-variant dark (&:is(.dark *));
-
-/* ===== 全域樣式 ===== */
-body {
-  background-color: var(--background);
-  color: var(--foreground);
-}
-
-/* ===== 自訂元件樣式 ===== */
-.card {
-  background-color: var(--card);
-  border-radius: 0.75rem;
-  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  border: 1px solid var(--border);
-}
-
-.container-page {
-  max-width: 72rem;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  padding-top: 2rem;
-  padding-bottom: 2rem;
-}
+@import "shadcn/tailwind.css";
 
 html {
   scroll-behavior: smooth;
 }
 
+/* 篩選 chips 橫向捲動時隱藏捲軸 */
 .hide-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -42,39 +18,28 @@ html {
 @theme inline {
   --font-sans: var(--font-noto-sans-tc), sans-serif;
   --font-serif: var(--font-noto-serif-tc), serif;
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
+
   --color-input: var(--input);
   --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
-  --color-card: var(--card);
-  --color-foreground: var(--foreground);
   --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-ring: var(--ring);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
 
-  /* BookMind 專屬：書況／筆記類型的色卡（摘錄、心得、正在閱讀、已完成、想讀） */
+  /* 書況／筆記類型標籤：摘錄 → reading、心得 → completed */
   --color-status-reading: var(--status-reading);
   --color-status-reading-bg: var(--status-reading-bg);
   --color-status-completed: var(--status-completed);
@@ -92,99 +57,42 @@ html {
 }
 
 :root {
-  --background: #f2ede6; /* 全站底色：首頁／書單／筆記／設定共用 */
-  --foreground: #352e22; /* 主要文字（標題、內文） */
-
-  --card: #fefcf8; /* 書籍卡、筆記卡、設定區塊卡片底色 */
-  --card-foreground: #1c1916;
-
-  --popover: #fefcf8;
-  --popover-foreground: #352e22;
-
-  --primary: #304430; /* 深森林綠：Logo、主要按鈕、底部導覽選中色 */
+  /* 主色 */
+  --primary: #304430;
   --primary-foreground: #fefcf8;
-
-  --secondary: #d6dbca; /* 淺綠底：「正在閱讀」標籤、次要按鈕 */
+  --ring: #304430;
+  --secondary: #d6dbca;
   --secondary-foreground: #2b4428;
 
-  --muted: #ede8de; /* 搜尋框、未選中頁籤底色 */
-  --muted-foreground: #6b6257; /* 次要說明文字（作者名、日期、備註） */
-
-  --accent: #ede2d1; /* 暖棕底：「已完成」標籤等強調用色 */
-  --accent-foreground: #8b5e34;
-
-  --destructive: #c24c3c; /* 「清除本機資料」等破壞性操作 */
-  --destructive-foreground: #fefcf8;
-
-  --border: #ddd5c4; /* 卡片邊框、輸入框邊框、分隔線 */
+  /* 底色 */
+  --background: #f2ede6;
+  --foreground: #352e22;
+  --card: #fefcf8;
+  --card-foreground: #1c1916;
+  --popover: #fefcf8;
+  --popover-foreground: #352e22;
+  --muted: #ede8de;
+  --muted-foreground: #6b6257;
+  --border: #ddd5c4;
   --input: #ddd5c4;
-  --ring: #2c4a3d; /* focus 外框色，跟主色一致 */
 
-  --chart-1: #2c4a3d;
-  --chart-2: #b85c38;
-  --chart-3: #6b7fa3;
-  --chart-4: #8b6f47;
-  --chart-5: #6b5b95;
+  /* 強調色 */
+  --accent-foreground: #7d5228;
+  --accent: #ede2d1;
 
-  --radius: 0.75rem; /* 卡片／按鈕圓角，比原本略大，貼近設計稿的圓潤感 */
-
-  --sidebar: #fefcf8;
-  --sidebar-foreground: #1c1916;
-  --sidebar-primary: #2c4a3d;
-  --sidebar-primary-foreground: #fefcf8;
-  --sidebar-accent: #eaf4ee;
-  --sidebar-accent-foreground: #2d6a4f;
-  --sidebar-border: #ddd5c4;
-  --sidebar-ring: #2c4a3d;
-
-  /* 書況 / 筆記類型狀態色 */
+  /* 閱讀狀態 */
   --status-reading: #2d6a4f;
   --status-reading-bg: #eaf4ee;
-  --status-completed: #8b5e34;
-  --status-completed-bg: #f5ede0;
   --status-want: #6b5b95;
   --status-want-bg: #ede9f5;
-}
+  --status-completed: #7d5228;
+  --status-completed-bg: #f5ede0;
 
-.dark {
-  --background: #1c1916;
-  --foreground: #f4efe6;
-  --card: #26221d;
-  --card-foreground: #f4efe6;
-  --popover: #26221d;
-  --popover-foreground: #f4efe6;
-  --primary: #6fa98a;
-  --primary-foreground: #1c1916;
-  --secondary: #2a3b32;
-  --secondary-foreground: #9fd4b4;
-  --muted: #2e2a24;
-  --muted-foreground: #a69c8d;
-  --accent: #3a2e22;
-  --accent-foreground: #e0b98a;
-  --destructive: #e0685a;
-  --destructive-foreground: #1c1916;
-  --border: #3a342c;
-  --input: #3a342c;
-  --ring: #6fa98a;
-  --chart-1: #6fa98a;
-  --chart-2: #d98b63;
-  --chart-3: #8fa3c9;
-  --chart-4: #c4a277;
-  --chart-5: #a493c9;
-  --sidebar: #26221d;
-  --sidebar-foreground: #f4efe6;
-  --sidebar-primary: #6fa98a;
-  --sidebar-primary-foreground: #1c1916;
-  --sidebar-accent: #2a3b32;
-  --sidebar-accent-foreground: #9fd4b4;
-  --sidebar-border: #3a342c;
-  --sidebar-ring: #6fa98a;
-  --status-reading: #9fd4b4;
-  --status-reading-bg: #2a3b32;
-  --status-completed: #e0b98a;
-  --status-completed-bg: #3a2e22;
-  --status-want: #b9a9e0;
-  --status-want-bg: #34304a;
+  /* 重點刪除 */
+  --destructive: #c24c3c;
+  --destructive-foreground: #fefcf8;
+
+  --radius: 0.625rem;
 }
 
 @layer base {
@@ -195,6 +103,6 @@ html {
     @apply bg-background text-foreground;
   }
   html {
-    @apply font-sans;
+    @apply font-serif;
   }
 }
