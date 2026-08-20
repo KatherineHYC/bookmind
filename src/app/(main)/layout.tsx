@@ -8,7 +8,7 @@ export default function MainLayout({
 }) {
   return (
     <div className="min-h-dvh bg-background">
-      <div className="pb-16">
+      <div className="pb-[calc(4rem+env(safe-area-inset-bottom))]">
         <main>{children}</main>
         <Footer />
       </div>

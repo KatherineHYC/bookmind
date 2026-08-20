@@ -16,7 +16,7 @@ export default function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-card">
+    <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-card pb-[env(safe-area-inset-bottom)]">
       <ul className="mx-auto flex max-w-md">
         {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
           const isActive = pathname === href || pathname.startsWith(`${href}/`);
