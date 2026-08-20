@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Library, PenLine, Tag, Sprout, type LucideIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 // 卡片資料：icon、標題、說明文字、底色 tone
@@ -87,9 +87,15 @@ export default function Home() {
               <br />
               都是你成長的養分。
             </p>
-            <Button asChild size="lg" className="mt-8 h-12 px-10 text-sm">
-              <Link href="/dashboard">開始記錄 →</Link>
-            </Button>
+            <Link
+              href="/dashboard"
+              className={cn(
+                buttonVariants({ size: "lg" }),
+                "mt-8 h-12 px-10 text-sm",
+              )}
+            >
+              開始記錄 →
+            </Link>
           </div>
         </div>
       </section>
@@ -108,7 +114,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== Section 3：引言（滿版色塊）===== */}
+      {/* ===== Section 3：引言 ===== */}
       <section className="isolate bg-secondary">
         <blockquote className="mx-auto flex w-fit flex-col items-center px-6 py-14 text-center">
           <p className="my-6 text-lg leading-loose text-secondary-foreground">
