@@ -30,6 +30,7 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: "#2C4A3D",
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
@@ -42,14 +43,7 @@ export default function RootLayout({
       lang="zh-TW"
       className={`${notoSerifTC.variable} ${notoSansTC.variable}`}
     >
-      <body className="antialiased">
-        <main>{children}</main>
-        <footer className="bg-primary text-white">
-          <div className="max-w-3xl mx-auto px-4 py-4 text-center text-sm text-slate-200">
-            <p>Copyright © 2026 Katherine Hsu</p>
-          </div>
-        </footer>
-      </body>
+      <body className="antialiased">{children}</body>
     </html>
   );
 }

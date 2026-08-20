@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Library, PenLine, Tag, Sprout, type LucideIcon } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
+import Footer from "@/components/layouts/Footer";
 import { cn } from "@/lib/utils";
 
 // 卡片資料：icon、標題、說明文字、底色 tone
@@ -71,59 +72,62 @@ const CONTAINER = "mx-auto w-full max-w-md px-6";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-background">
-      {/* ===== Section 1：Hero ===== */}
-      <section className="isolate">
-        <div className="mx-auto w-full text-center max-w-md py-9">
-          <div>
-            <h1 className="text-6xl/tight font-semibold text-primary">
-              BookMind
-            </h1>
-            <h2 className="mt-7 whitespace-nowrap text-2xl/loose tracking-wider font-medium text-foreground">
-              將字裡行間的靈感記錄下來
+    <>
+      <main className="bg-background">
+        {/* ===== Section 1：Hero ===== */}
+        <section className="isolate">
+          <div className="mx-auto w-full text-center max-w-md py-9">
+            <div>
+              <h1 className="text-6xl/tight font-semibold text-primary">
+                BookMind
+              </h1>
+              <h2 className="mt-7 whitespace-nowrap text-2xl/loose tracking-wider font-medium text-foreground">
+                將字裡行間的靈感記錄下來
+              </h2>
+              <p className="mt-6 text-base/loose text-muted-foreground">
+                一本書，一個想法，
+                <br />
+                都是你成長的養分。
+              </p>
+              <Link
+                href="/dashboard"
+                className={cn(
+                  buttonVariants({ size: "lg" }),
+                  "mt-8 h-12 px-10 text-sm",
+                )}
+              >
+                開始記錄 →
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* ===== Section 2：功能介紹 ===== */}
+        <section className="isolate">
+          <div className={cn(CONTAINER, "py-10")}>
+            <h2 className="text-center text-xl/loose tracking-widest font-medium text-foreground">
+              為閱讀而生的筆記空間
             </h2>
-            <p className="mt-6 text-base/loose text-muted-foreground">
-              一本書，一個想法，
+            <div className="mt-8 grid grid-cols-2 gap-x-4 gap-y-8">
+              {FEATURES.map((feature) => (
+                <FeatureCard key={feature.title} {...feature} />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ===== Section 3：引言 ===== */}
+        <section className="isolate bg-secondary">
+          <blockquote className="mx-auto flex w-fit flex-col items-center px-6 py-14 text-center">
+            <p className="my-6 text-lg leading-loose text-secondary-foreground">
+              「閱讀是一場與作者的對話，
               <br />
-              都是你成長的養分。
+              而筆記，是與自己的對話。」
             </p>
-            <Link
-              href="/dashboard"
-              className={cn(
-                buttonVariants({ size: "lg" }),
-                "mt-8 h-12 px-10 text-sm",
-              )}
-            >
-              開始記錄 →
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ===== Section 2：功能介紹 ===== */}
-      <section className="isolate">
-        <div className={cn(CONTAINER, "py-10")}>
-          <h2 className="text-center text-xl/loose tracking-widest font-medium text-foreground">
-            為閱讀而生的筆記空間
-          </h2>
-          <div className="mt-8 grid grid-cols-2 gap-x-4 gap-y-8">
-            {FEATURES.map((feature) => (
-              <FeatureCard key={feature.title} {...feature} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ===== Section 3：引言 ===== */}
-      <section className="isolate bg-secondary">
-        <blockquote className="mx-auto flex w-fit flex-col items-center px-6 py-14 text-center">
-          <p className="my-6 text-lg leading-loose text-secondary-foreground">
-            「閱讀是一場與作者的對話，
-            <br />
-            而筆記，是與自己的對話。」
-          </p>
-        </blockquote>
-      </section>
-    </main>
+          </blockquote>
+        </section>
+      </main>
+      <Footer />
+    </>
   );
 }
