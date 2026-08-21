@@ -1,3 +1,7 @@
+import PageHeader from "@/components/layouts/PageHeader";
+
 export default function LibraryPage() {
-  return <div className="p-6">藏書</div>;
+  return (
+    <PageHeader title="藏書" subtitle="收藏與整理你的書籍，讓閱讀更有方向。" />
+  );
 }
