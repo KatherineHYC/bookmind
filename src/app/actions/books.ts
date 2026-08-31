@@ -73,7 +73,7 @@ export async function updateBookStatus(id: string, status: ReadingStatus) {
 
   const { error } = await supabase
     .from("books")
-    .update({ status, updated_at: new Date().toISOString() })
+    .update({ status })
     .eq("id", id);
 
   if (error) {
