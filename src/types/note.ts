@@ -37,3 +37,9 @@ export interface ThoughtNote extends NoteBase {
 
 // 應用層的筆記型別（對應 DB 的 CHECK 約束）
 export type Note = ExcerptNote | ThoughtNote;
+
+export interface NoteWithBookRow extends NoteRow {
+  books: { title: string } | null;
+}
+
+export type NoteWithBook = Note & { bookTitle: string };

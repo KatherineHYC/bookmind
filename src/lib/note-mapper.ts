@@ -1,4 +1,9 @@
-import type { Note, NoteRow } from "@/types/note";
+import type {
+  Note,
+  NoteRow,
+  NoteWithBook,
+  NoteWithBookRow,
+} from "@/types/note";
 
 export function rowToNote(row: NoteRow): Note {
   const base = {
@@ -29,5 +34,12 @@ export function rowToNote(row: NoteRow): Note {
     type: "thought",
     excerpt: null,
     content: row.content,
+  };
+}
+
+export function rowToNoteWithBook(row: NoteWithBookRow): NoteWithBook {
+  return {
+    ...rowToNote(row),
+    bookTitle: row.books?.title ?? "未知書籍",
   };
 }
