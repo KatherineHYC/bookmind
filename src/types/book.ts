@@ -40,16 +40,6 @@ export interface Book {
 // 書籍閱讀狀態
 export type ReadingStatus = "want_to_read" | "reading" | "completed";
 
-// Supabase 書單紀錄（Book + 使用者狀態）
-export interface UserBook {
-  id: string;
-  userId: string;
-  book: Book;
-  status: ReadingStatus;
-  createdAt: string;
-  updatedAt: string;
-}
-
 // Supabase books 資料表的實際欄位（DB 原始格式）
 export interface BookRow {
   id: string;
@@ -61,6 +51,7 @@ export interface BookRow {
   cover_url: string | null;
   status: ReadingStatus;
   updated_at: string;
+  isbn13: string | null;
 }
 
 // 畫面顯示書單用的型別（authors 還原成陣列）
@@ -72,4 +63,5 @@ export interface BookListItem {
   coverUrl: string | null;
   status: ReadingStatus;
   createdAt: string;
+  isbn13: string | null;
 }
