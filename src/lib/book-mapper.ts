@@ -11,6 +11,7 @@ export function rowToBookListItem(row: BookRow): BookListItem {
     coverUrl: row.cover_url,
     status: row.status,
     createdAt: row.created_at,
+    isbn13: row.isbn13,
   };
 }
 

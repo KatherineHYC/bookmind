@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "typecheck": "tsc --noEmit",
     "lint": "eslint",
     "notes:install": "node scripts/install-private-notes.mjs",
     "notes:strip": "node scripts/strip-private-notes.mjs",
