@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 export default function HeroSection() {
   return (
@@ -18,15 +17,14 @@ export default function HeroSection() {
           都是你成長的養分。
         </p>
 
-        <Link
-          href="/dashboard"
-          className={cn(
-            buttonVariants({ size: "lg" }),
-            "mt-8 h-12 px-10 text-sm",
-          )}
+        <Button
+          render={<Link href="/dashboard" />}
+          nativeButton={false}
+          size="lg"
+          className="mt-8 h-12 px-10 text-sm"
         >
           開始記錄 →
-        </Link>
+        </Button>
       </div>
     </section>
   );
