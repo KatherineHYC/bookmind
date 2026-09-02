@@ -105,4 +105,8 @@ html {
   html {
     @apply font-serif;
   }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
 }
