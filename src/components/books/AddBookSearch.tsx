@@ -110,7 +110,6 @@ export default function AddBookSearch() {
           >
             <div className="min-w-0">
               <p className="font-medium truncate">{book.title}</p>
-              {/* @NOTE authors 是陣列，可能是空陣列，用 join 顯示比較保險 */}
               <p className="text-gray-500 text-xs truncate">
                 {book.authors.join("、") || "作者不詳"}
               </p>
