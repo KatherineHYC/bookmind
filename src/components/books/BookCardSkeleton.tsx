@@ -1,4 +1,5 @@
 import { Skeleton } from "@/components/ui/skeleton";
+import { BOOK_GRID_CLASS } from "./BookGrid";
 
 // 單張書籍卡的骨架：封面 2:3、書名兩行、作者一行、狀態徽章
 export default function BookCardSkeleton() {
@@ -16,7 +17,7 @@ export default function BookCardSkeleton() {
 // grid 版：一次排 N 張，頁面直接用這個
 export function BookGridSkeleton({ count = 6 }: { count?: number }) {
   return (
-    <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+    <div className={BOOK_GRID_CLASS}>
       {Array.from({ length: count }, (_, i) => (
         <BookCardSkeleton key={i} />
       ))}
