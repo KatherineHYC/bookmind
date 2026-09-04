@@ -2,21 +2,50 @@ import "server-only";
 
 import { createClient } from "@/lib/supabase/server";
 import { rowToBookListItem } from "@/lib/book-mapper";
-import type { BookListItem, BookRow, ReadingStatus } from "@/types/book";
+import type {
+  BookListItem,
+  BookQuery,
+  BookRowWithNoteCount,
+  BookSort,
+  ReadingStatus,
+} from "@/types/book";
 
-// 取得目前使用者的書籍，最新加入的在前
-export async function getBooksByStatus(
-  status?: ReadingStatus,
-): Promise<BookListItem[]> {
+const SELECT_WITH_NOTE_COUNT = "*, notes(count)";
+
+const SORT_COLUMN: Record<BookSort, { column: string; ascending: boolean }> = {
+  newest: { column: "created_at", ascending: false },
+  oldest: { column: "created_at", ascending: true },
+  title: { column: "title", ascending: true },
+};
+
+function sanitizeKeyword(keyword: string): string {
+  return keyword.replace(/[,%_()]/g, " ").trim();
+}
+
+// 藏書頁主查詢：狀態 ＋ 關鍵字 ＋ 排序自由組合
+export async function getBooks({
+  status,
+  keyword,
+  sort = "newest",
+}: BookQuery = {}): Promise<BookListItem[]> {
   const supabase = await createClient();
 
-  const base = supabase.from("books").select("*");
+  let query = supabase.from("books").select(SELECT_WITH_NOTE_COUNT);
 
-  const filtered = status ? base.eq("status", status) : base;
+  if (status) query = query.eq("status", status);
 
-  const { data, error } = await filtered
-    .order("created_at", { ascending: false })
-    .overrideTypes<BookRow[], { merge: false }>();
+  const safeKeyword = keyword ? sanitizeKeyword(keyword) : "";
+  if (safeKeyword) {
+    query = query.or(
+      `title.ilike.%${safeKeyword}%,authors.ilike.%${safeKeyword}%,isbn13.ilike.%${safeKeyword}%`,
+    );
+  }
+
+  const { column, ascending } = SORT_COLUMN[sort];
+
+  const { data, error } = await query
+    .order(column, { ascending })
+    .overrideTypes<BookRowWithNoteCount[], { merge: false }>();
 
   if (error) {
     console.error("查詢書籍失敗：", error);
@@ -32,9 +61,9 @@ export async function getBookById(id: string): Promise<BookListItem | null> {
 
   const { data, error } = await supabase
     .from("books")
-    .select("*")
+    .select(SELECT_WITH_NOTE_COUNT) // 詳情頁也要顯示筆記數
     .eq("id", id)
-    .maybeSingle<BookRow>();
+    .maybeSingle<BookRowWithNoteCount>();
 
   if (error) {
     console.error("查詢書籍失敗：", error);

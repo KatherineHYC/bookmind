@@ -64,4 +64,20 @@ export interface BookListItem {
   status: ReadingStatus;
   createdAt: string;
   isbn13: string | null;
+  noteCount: number;
+}
+
+// 對應藏書頁的排序下拉選單
+export type BookSort = "newest" | "oldest" | "title";
+
+// 查詢條件 全部選填
+export interface BookQuery {
+  status?: ReadingStatus;
+  keyword?: string;
+  sort?: BookSort;
+}
+
+// 帶關聯筆記數的原始列
+export interface BookRowWithNoteCount extends BookRow {
+  notes: { count: number }[];
 }
