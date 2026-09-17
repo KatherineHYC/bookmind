@@ -1,0 +1,32 @@
+export const STATUS_FILTER_OPTIONS = [
+  { value: "all", label: "全部" },
+  { value: "reading", label: "閱讀中" },
+  { value: "completed", label: "已完成" },
+  { value: "want_to_read", label: "想讀" },
+] as const;
+
+export type BookStatusFilter = (typeof STATUS_FILTER_OPTIONS)[number]["value"];
+
+export interface BookFilters {
+  status: BookStatusFilter;
+}
+
+type RawSearchParams = Record<string, string | string[] | undefined>;
+
+function pickOne(value: string | string[] | undefined): string {
+  return (Array.isArray(value) ? value[0] : value)?.trim() ?? "";
+}
+
+function isOption<T extends string>(
+  options: readonly { value: T }[],
+  value: string,
+): value is T {
+  return options.some((option) => option.value === value);
+}
+
+export function parseBookFilters(raw: RawSearchParams): BookFilters {
+  const status = pickOne(raw.status);
+  return {
+    status: isOption(STATUS_FILTER_OPTIONS, status) ? status : "all",
+  };
+}
