@@ -36,7 +36,7 @@ export default function FilterChips<T extends string>({
             onClick={() => onChange(option.value)}
             aria-pressed={isActive}
             className={cn(
-              "shrink-0 rounded-full px-4 py-2 text-sm transition-colors",
+              "shrink-0 rounded-full px-3 py-1.5 text-[0.8125rem]/5 whitespace-nowrap transition-colors",
               isActive
                 ? "bg-primary text-primary-foreground"
                 : "border border-border bg-card text-foreground hover:bg-muted",

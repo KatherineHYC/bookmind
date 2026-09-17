@@ -25,10 +25,9 @@ export default function SortSelect<T extends string>({
     <div className={cn("relative shrink-0", className)}>
       <select
         value={value}
-        // 原生 select 的值一定是字串，這裡的斷言範圍限定在 options 內
         onChange={(e) => onChange(e.target.value as T)}
         aria-label="排序方式"
-        className="h-11 appearance-none rounded-full border border-border bg-card pl-4 pr-9 text-sm text-foreground outline-none focus-visible:ring-3 focus-visible:ring-ring/30"
+        className="h-8 appearance-none rounded-full border border-border bg-card pl-3 pr-8 text-[0.8125rem]/5 text-foreground outline-none focus-visible:ring-3 focus-visible:ring-ring/30"
       >
         {options.map((option) => (
           <option key={option.value} value={option.value}>
@@ -38,7 +37,7 @@ export default function SortSelect<T extends string>({
       </select>
 
       <ChevronDown
-        className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+        className="pointer-events-none absolute right-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground"
         aria-hidden
       />
     </div>

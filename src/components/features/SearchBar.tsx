@@ -29,8 +29,7 @@ export default function SearchBar({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        // 左右各留出 icon 的空間
-        className="h-11 rounded-full bg-muted pl-10 pr-10"
+        className="h-11 rounded-full bg-muted pl-10 pr-10 [&::-webkit-search-cancel-button]:appearance-none"
       />
 
       {/* 有輸入內容才出現清除按鈕 */}
