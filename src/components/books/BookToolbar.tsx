@@ -2,6 +2,7 @@
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import FilterChips from "@/components/features/FilterChips";
+import SearchBar from "@/components/features/SearchBar";
 import { STATUS_FILTER_OPTIONS, type BookFilters } from "@/lib/book-filters";
 
 export default function BookToolbar({ filters }: { filters: BookFilters }) {
@@ -22,7 +23,11 @@ export default function BookToolbar({ filters }: { filters: BookFilters }) {
   }
 
   return (
-    <div className="mb-4">
+    <div className="mb-4 space-y-3">
+      <SearchBar
+        defaultValue={filters.keyword}
+        onSubmit={(keyword) => updateParams({ q: keyword })}
+      />
       <FilterChips
         options={[...STATUS_FILTER_OPTIONS]}
         value={filters.status}

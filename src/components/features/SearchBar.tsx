@@ -1,22 +1,31 @@
 "use client";
 
+import { useState, useRef } from "react";
 import { Search, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
 interface SearchBarProps {
-  value: string;
-  onChange: (value: string) => void;
+  defaultValue?: string;
+  onSubmit: (value: string) => void;
   placeholder?: string;
   className?: string;
 }
 
 export default function SearchBar({
-  value,
-  onChange,
-  placeholder = "搜尋",
+  defaultValue = "",
+  onSubmit,
+  placeholder = "搜尋書名、作者或 ISBN",
   className,
 }: SearchBarProps) {
+  const [value, setValue] = useState(defaultValue);
+  const isComposingRef = useRef(false);
+
+  function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === "Enter" && !isComposingRef.current) {
+      onSubmit(value.trim());
+    }
+  }
   return (
     <div className={cn("relative", className)}>
       <Search
@@ -27,7 +36,10 @@ export default function SearchBar({
       <Input
         type="search"
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(e) => setValue(e.target.value)}
+        onKeyDown={handleKeyDown}
+        onCompositionStart={() => (isComposingRef.current = true)}
+        onCompositionEnd={() => (isComposingRef.current = false)}
         placeholder={placeholder}
         className="h-11 rounded-full bg-muted pl-10 pr-10 [&::-webkit-search-cancel-button]:appearance-none"
       />
@@ -36,7 +48,10 @@ export default function SearchBar({
       {value.length > 0 && (
         <button
           type="button"
-          onClick={() => onChange("")}
+          onClick={() => {
+            setValue("");
+            onSubmit("");
+          }}
           aria-label="清除搜尋"
           className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-muted-foreground hover:text-foreground"
         >

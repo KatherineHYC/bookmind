@@ -9,6 +9,7 @@ export type BookStatusFilter = (typeof STATUS_FILTER_OPTIONS)[number]["value"];
 
 export interface BookFilters {
   status: BookStatusFilter;
+  keyword: string;
 }
 
 type RawSearchParams = Record<string, string | string[] | undefined>;
@@ -26,7 +27,9 @@ function isOption<T extends string>(
 
 export function parseBookFilters(raw: RawSearchParams): BookFilters {
   const status = pickOne(raw.status);
+  const keyword = pickOne(raw.q);
   return {
     status: isOption(STATUS_FILTER_OPTIONS, status) ? status : "all",
+    keyword,
   };
 }

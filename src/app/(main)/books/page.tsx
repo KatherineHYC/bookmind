@@ -15,9 +15,10 @@ export default async function LibraryPage({ searchParams }: LibraryPageProps) {
 
   const books = await getBooks({
     status: filters.status === "all" ? undefined : filters.status,
+    keyword: filters.keyword || undefined,
   });
 
-  const isFiltered = filters.status !== "all";
+  const isFiltered = filters.status !== "all" || filters.keyword !== "";
 
   return (
     <>
