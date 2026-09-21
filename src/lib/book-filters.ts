@@ -1,3 +1,5 @@
+import { BookSort } from "@/types/book";
+
 export const STATUS_FILTER_OPTIONS = [
   { value: "all", label: "全部" },
   { value: "reading", label: "閱讀中" },
@@ -7,9 +9,16 @@ export const STATUS_FILTER_OPTIONS = [
 
 export type BookStatusFilter = (typeof STATUS_FILTER_OPTIONS)[number]["value"];
 
+export const SORT_OPTIONS = [
+  { value: "newest", label: "最新" },
+  { value: "oldest", label: "最舊" },
+  { value: "title", label: "書名" },
+] as const satisfies readonly { value: BookSort; label: string }[];
+
 export interface BookFilters {
   status: BookStatusFilter;
   keyword: string;
+  sort: BookSort;
 }
 
 type RawSearchParams = Record<string, string | string[] | undefined>;
@@ -28,8 +37,10 @@ function isOption<T extends string>(
 export function parseBookFilters(raw: RawSearchParams): BookFilters {
   const status = pickOne(raw.status);
   const keyword = pickOne(raw.q);
+  const sort = pickOne(raw.sort);
   return {
     status: isOption(STATUS_FILTER_OPTIONS, status) ? status : "all",
     keyword,
+    sort: isOption(SORT_OPTIONS, sort) ? sort : "newest",
   };
 }
