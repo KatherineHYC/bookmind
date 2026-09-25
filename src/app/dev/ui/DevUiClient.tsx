@@ -75,13 +75,10 @@ export default function DevUiClient() {
       </Section>
 
       <Section title="SearchBar">
-        <SearchBar
-          value={query}
-          onChange={setQuery}
-          placeholder="搜尋書名、作者或 ISBN"
-        />
+        {/* 半受控：打字的狀態住在 SearchBar 裡，按 Enter（或按清除）才把值交出來 */}
+        <SearchBar onSubmit={setQuery} />
         <p className="mt-2 text-xs text-muted-foreground">
-          目前值：{query || "（空）"}
+          最後送出：{query || "（空）"}
         </p>
       </Section>
 
