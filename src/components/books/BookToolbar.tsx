@@ -1,7 +1,10 @@
 "use client";
 
+import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { Plus } from "lucide-react";
 import FilterChips from "@/components/features/FilterChips";
+import { Button } from "@/components/ui/button";
 import SearchBar from "@/components/features/SearchBar";
 import SortSelect from "@/components/features/SortSelect";
 import {
@@ -29,10 +32,24 @@ export default function BookToolbar({ filters }: { filters: BookFilters }) {
 
   return (
     <div className="mb-4 space-y-3">
-      <SearchBar
-        defaultValue={filters.keyword}
-        onSubmit={(keyword) => updateParams({ q: keyword })}
-      />
+      {/* 第一排：搜尋框 + 新增按鈕 */}
+      <div className="flex items-center gap-3">
+        <SearchBar
+          defaultValue={filters.keyword}
+          onSubmit={(keyword) => updateParams({ q: keyword })}
+          className="min-w-0 flex-1"
+        />
+
+        <Button
+          render={<Link href="/books/new" />}
+          nativeButton={false}
+          className="h-11 px-4"
+        >
+          <Plus data-icon="inline-start" aria-hidden />
+          新增書籍
+        </Button>
+      </div>
+      {/* 第二排：篩選 + 排序 */}
       <div className="flex items-center gap-3">
         <FilterChips
           options={[...STATUS_FILTER_OPTIONS]}

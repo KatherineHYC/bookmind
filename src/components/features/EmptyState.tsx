@@ -10,8 +10,8 @@ interface EmptyStateProps {
   description?: string;
   illustration?: string;
   actionLabel?: string;
-  actionHref?: string; // 導頁用
-  onAction?: () => void; // 開 Dialog 用
+  actionHref?: string;
+  onAction?: () => void;
 }
 
 export default function EmptyState({
@@ -27,7 +27,6 @@ export default function EmptyState({
 
   return (
     <div className="flex flex-col items-center px-6 py-12 text-center">
-      {/* 版位尺寸寫死，換圖不影響版面 */}
       <div className="w-48 md:w-56">
         {illustration ? (
           <Image

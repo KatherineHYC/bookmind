@@ -7,6 +7,7 @@ import { BookGridSkeleton } from "@/components/books/BookCardSkeleton";
 import BookToolbar from "@/components/books/BookToolbar";
 import { getBooks } from "@/lib/queries/books";
 import { parseBookFilters, type BookFilters } from "@/lib/book-filters";
+import FAB from "@/components/layouts/FAB";
 
 interface LibraryPageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -28,6 +29,8 @@ async function BookResults({ filters }: { filters: BookFilters }) {
       <EmptyState
         title="書架還空著"
         description="加入第一本書，開始你的閱讀紀錄。"
+        actionLabel="新增書籍"
+        actionHref="/books/new"
       />
     );
   }
@@ -59,6 +62,7 @@ export default async function LibraryPage({ searchParams }: LibraryPageProps) {
         <Suspense key={suspenseKey} fallback={<BookGridSkeleton />}>
           <BookResults filters={filters} />
         </Suspense>
+        <FAB href="/books/new" label="新增書籍" />
       </Container>
     </>
   );
