@@ -3,6 +3,8 @@
 import { useState } from "react";
 import StatusBadge from "@/components/books/StatusBadge";
 import { BookGridSkeleton } from "@/components/books/BookCardSkeleton";
+import BookGrid from "@/components/books/BookGrid";
+import { MOCK_BOOKS } from "./mock-books";
 import NoteTypeBadge from "@/components/notes/NoteTypeBadge";
 import { NoteListSkeleton } from "@/components/notes/NoteCardSkeleton";
 import EmptyState from "@/components/features/EmptyState";
@@ -32,13 +34,14 @@ function Section({
 
 const FILTER_OPTIONS = [
   { value: "all", label: "全部" },
-  { value: "reading", label: "正在閱讀" },
+  { value: "reading", label: "閱讀中" },
   { value: "completed", label: "已完成" },
   { value: "want_to_read", label: "想讀" },
 ] as const;
 
 const SORT_OPTIONS = [
-  { value: "newest", label: "最新新增" },
+  { value: "newest", label: "最新" },
+  { value: "oldest", label: "最舊" },
   { value: "title", label: "書名" },
 ] as const;
 
@@ -112,6 +115,10 @@ export default function DevUiClient() {
           actionLabel="＋ 新增書籍"
           actionHref="/books"
         />
+      </Section>
+
+      <Section title="BookGrid ＋ BookCard（假資料）">
+        <BookGrid books={MOCK_BOOKS} />
       </Section>
 
       <Section title="Skeleton：書籍 grid">
