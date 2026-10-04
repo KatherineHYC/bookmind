@@ -15,7 +15,7 @@ export default function FAB({ href, label, icon, className }: FABProps) {
       href={href}
       aria-label={label}
       className={cn(
-        "fixed right-5 z-40 flex size-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-colors hover:bg-primary/90",
+        "sticky z-40 ml-auto flex size-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-colors hover:bg-primary/90",
         "bottom-[calc(4rem+env(safe-area-inset-bottom)+1rem)]",
         className,
       )}
