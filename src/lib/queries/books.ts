@@ -1,8 +1,10 @@
 import "server-only";
 
 import { createClient } from "@/lib/supabase/server";
-import { rowToBookListItem } from "@/lib/book-mapper";
+import { rowToBookDetail, rowToBookListItem } from "@/lib/book-mapper";
+import { isUuid } from "@/lib/uuid";
 import type {
+  BookDetail,
   BookListItem,
   BookQuery,
   BookRow,
@@ -56,8 +58,12 @@ export async function getBooks({
   return data.map(rowToBookListItem);
 }
 
-// 依 id 取單本書；找不到回 null
-export async function getBookById(id: string): Promise<BookListItem | null> {
+// 依 id 取單本書（含出版資訊）；找不到回 null
+export async function getBookById(id: string): Promise<BookDetail | null> {
+  // books.id 是 uuid 型別，把 "abc" 丟進去查，資料庫會直接報「格式錯誤」而不是「查無資料」。
+  // 先在這裡擋掉，亂打的網址就一律當成找不到，也不會白跑一趟資料庫。
+  if (!isUuid(id)) return null;
+
   const supabase = await createClient();
 
   const { data, error } = await supabase
@@ -71,7 +77,7 @@ export async function getBookById(id: string): Promise<BookListItem | null> {
     return null;
   }
 
-  return data ? rowToBookListItem(data) : null;
+  return data ? rowToBookDetail(data) : null;
 }
 
 // 計算書籍數量；首頁統計卡用
