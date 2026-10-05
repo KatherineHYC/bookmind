@@ -4,23 +4,38 @@ import { useState, useTransition } from "react";
 import { Check, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { addBook } from "@/app/actions/books";
+import { cn } from "@/lib/utils";
 import type { Book } from "@/types/book";
 
 interface AddBookButtonProps {
   book: Book;
   isAdded: boolean;
+  variant?: "compact" | "full";
 }
 
-// 搜尋結果卡右側的操作區：加入 → 加入中 → 已加入（失敗時顯示重試）
-export default function AddBookButton({ book, isAdded }: AddBookButtonProps) {
+// 加入書單的操作區：加入 → 加入中 → 已加入（失敗時顯示重試）
+export default function AddBookButton({
+  book,
+  isAdded,
+  variant = "compact",
+}: AddBookButtonProps) {
   const [isPending, startTransition] = useTransition();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+  const isFull = variant === "full";
+
   if (isAdded) {
     return (
-      <span className="inline-flex h-11 shrink-0 items-center gap-1 rounded-lg bg-muted px-3 text-sm text-muted-foreground">
+      <span
+        className={cn(
+          "inline-flex shrink-0 items-center bg-muted text-muted-foreground",
+          isFull
+            ? "h-12 w-full justify-center gap-1.5 rounded-full text-base"
+            : "h-11 gap-1 rounded-lg px-3 text-sm",
+        )}
+      >
         <Check className="size-4" aria-hidden />
-        已加入
+        {isFull ? "已加入書單" : "已加入"}
       </span>
     );
   }
@@ -45,27 +60,40 @@ export default function AddBookButton({ book, isAdded }: AddBookButtonProps) {
     });
   }
 
+  const idleLabel = isFull ? "加入書單" : "加入";
+
   return (
-    <div className="flex shrink-0 flex-col items-end gap-1">
+    <div
+      className={cn(
+        "flex shrink-0 flex-col",
+        isFull ? "w-full gap-2" : "items-end gap-1",
+      )}
+    >
       <Button
         onClick={handleAdd}
         disabled={isPending}
         aria-label={isPending ? "加入中" : `加入《${book.title}》`}
-        className="h-11 min-w-16 rounded-lg px-4 disabled:opacity-100"
+        className={cn(
+          "disabled:opacity-100",
+          isFull ? "h-12 w-full text-base" : "h-11 min-w-16 rounded-lg px-4",
+        )}
       >
         {isPending ? (
           <Loader2 className="size-5 animate-spin" aria-hidden />
         ) : errorMessage ? (
           "重試"
         ) : (
-          "加入"
+          idleLabel
         )}
       </Button>
 
       {errorMessage && (
         <p
           role="alert"
-          className="max-w-24 text-right text-xs/4 text-destructive"
+          className={cn(
+            "text-destructive",
+            isFull ? "text-center text-sm" : "max-w-24 text-right text-xs/4",
+          )}
         >
           {errorMessage}
         </p>
