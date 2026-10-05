@@ -8,12 +8,24 @@ const SCANNER_ELEMENT_ID = "isbn-scanner-region";
 
 let previousShutdown: Promise<void> = Promise.resolve();
 
+export type CameraErrorReason = "denied" | "unavailable" | "failed";
+
+function toCameraErrorReason(error: unknown): CameraErrorReason {
+  if (!navigator.mediaDevices?.getUserMedia) return "unavailable";
+
+  const message = String(error);
+  if (/NotAllowedError|SecurityError/.test(message)) return "denied";
+  if (/NotFoundError|OverconstrainedError/.test(message)) return "unavailable";
+
+  return "failed";
+}
+
 interface IsbnScannerProps {
   // 暫停辨識（相機畫面照常顯示，只是掃到東西不回報）
   paused: boolean;
   onDetected: (isbn13: string) => void;
   onReady: () => void;
-  onError: () => void;
+  onError: (reason: CameraErrorReason) => void;
 }
 
 // 只負責「相機 + 條碼辨識」，畫面上的取景框、提示文字、結果卡都由外層決定
@@ -28,7 +40,9 @@ export default function IsbnScanner({
     onDetected(text);
   });
   const handleStarted = useEffectEvent(() => onReady());
-  const handleFailed = useEffectEvent(() => onError());
+  const handleFailed = useEffectEvent((reason: CameraErrorReason) =>
+    onError(reason),
+  );
 
   useEffect(() => {
     let cancelled = false;
@@ -57,7 +71,7 @@ export default function IsbnScanner({
       (error: unknown) => {
         if (cancelled) return;
         console.error("相機啟動失敗：", error);
-        handleFailed();
+        handleFailed(toCameraErrorReason(error));
       },
     );
 

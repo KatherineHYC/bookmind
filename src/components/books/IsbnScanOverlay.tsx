@@ -1,12 +1,20 @@
 "use client";
 
 import { useEffect, useEffectEvent, useRef, useState } from "react";
-import { Loader2, SearchX, X } from "lucide-react";
+import {
+  BookOpen,
+  Camera,
+  Loader2,
+  Search,
+  X,
+  type LucideIcon,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import AddBookButton from "./AddBookButton";
 import BookCover from "./BookCover";
-import IsbnScanner from "./IsbnScanner";
+import IsbnScanner, { type CameraErrorReason } from "./IsbnScanner";
 import { searchByISBN } from "@/lib/google-books";
+import { cn } from "@/lib/utils";
 import type { Book } from "@/types/book";
 
 type ScanState =
@@ -16,7 +24,7 @@ type ScanState =
   | { status: "found"; isbn: string; book: Book }
   | { status: "not-found"; isbn: string }
   | { status: "lookup-error"; isbn: string }
-  | { status: "camera-error" };
+  | { status: "camera-error"; reason: CameraErrorReason };
 
 interface IsbnScanOverlayProps {
   addedIds: ReadonlySet<string>;
@@ -30,6 +38,24 @@ const SHEET_BUTTON_CLASS = "h-12 w-full text-base";
 const SHEET_OUTLINE_BUTTON_CLASS =
   "h-12 w-full border-primary/50 bg-card text-base text-primary";
 
+const CAMERA_ERROR_COPY: Record<
+  CameraErrorReason,
+  { title: string; description: string }
+> = {
+  denied: {
+    title: "需要相機權限才能掃描條碼",
+    description: "請在瀏覽器設定中，開啟相機權限以使用掃描功能。",
+  },
+  unavailable: {
+    title: "找不到可用的相機",
+    description: "這台裝置或瀏覽器沒有可用的相機，請改用手動輸入。",
+  },
+  failed: {
+    title: "相機無法啟動",
+    description: "相機可能正被其他 App 使用，關閉後再試一次。",
+  },
+};
+
 // 蓋在 /books/new 上的全螢幕掃描畫面
 export default function IsbnScanOverlay({
   addedIds,
@@ -37,6 +63,8 @@ export default function IsbnScanOverlay({
   onManualEntry,
 }: IsbnScanOverlayProps) {
   const [state, setState] = useState<ScanState>({ status: "starting" });
+
+  const [scannerKey, setScannerKey] = useState(0);
 
   // 跟 AddBookSearch 的 latestRequestRef 同一招：丟掉過期的查詢結果
   const latestLookupRef = useRef(0);
@@ -79,6 +107,11 @@ export default function IsbnScanOverlay({
     setState({ status: "scanning" });
   }
 
+  function handleRetryCamera() {
+    setState({ status: "starting" });
+    setScannerKey((key) => key + 1);
+  }
+
   const isAiming = state.status === "starting" || state.status === "scanning";
 
   return (
@@ -89,6 +122,7 @@ export default function IsbnScanOverlay({
       className="fixed inset-0 z-50 overflow-hidden bg-black text-white"
     >
       <IsbnScanner
+        key={scannerKey}
         paused={state.status !== "scanning"}
         onDetected={lookUp}
         onReady={() =>
@@ -96,7 +130,7 @@ export default function IsbnScanOverlay({
             prev.status === "starting" ? { status: "scanning" } : prev,
           )
         }
-        onError={() => setState({ status: "camera-error" })}
+        onError={(reason) => setState({ status: "camera-error", reason })}
       />
 
       <button
@@ -135,19 +169,12 @@ export default function IsbnScanOverlay({
         </>
       )}
 
-      {/* 先放最基本的提示，正式版（圖示卡片、依原因分開說明）在 D6 */}
       {state.status === "camera-error" && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 px-8 text-center">
-          <p className="text-lg font-medium" role="alert">
-            無法使用相機
-          </p>
-          <p className="text-sm/relaxed text-white/80">
-            請確認已允許相機權限，或改用手動輸入。
-          </p>
-          <Button onClick={onManualEntry} className="mt-2 h-12 px-6 text-base">
-            改用手動輸入 ISBN
-          </Button>
-        </div>
+        <CameraErrorCard
+          reason={state.reason}
+          onRetry={handleRetryCamera}
+          onManualEntry={onManualEntry}
+        />
       )}
 
       <ScanResultSheet
@@ -157,6 +184,89 @@ export default function IsbnScanOverlay({
         onRetry={lookUp}
         onManualEntry={onManualEntry}
       />
+    </div>
+  );
+}
+
+interface StatusIconProps {
+  icon: LucideIcon;
+  badge: LucideIcon;
+  // primary：一般提示（綠）；destructive：被擋住了（紅）
+  tone: "primary" | "destructive";
+}
+
+// 圓形底的大圖示，右下角疊一顆小徽章（設計稿 G、I 共用的樣式）
+function StatusIcon({ icon: Icon, badge: Badge, tone }: StatusIconProps) {
+  return (
+    <div
+      className="relative flex size-16 items-center justify-center rounded-full bg-muted"
+      aria-hidden
+    >
+      <Icon
+        className={cn(
+          "size-7",
+          tone === "primary" ? "text-primary" : "text-muted-foreground",
+        )}
+      />
+      <span
+        className={cn(
+          "absolute -right-1 -bottom-1 flex size-6 items-center justify-center rounded-full ring-2 ring-card",
+          tone === "primary"
+            ? "bg-primary text-primary-foreground"
+            : "bg-destructive text-destructive-foreground",
+        )}
+      >
+        <Badge className="size-3.5" strokeWidth={2.5} />
+      </span>
+    </div>
+  );
+}
+
+interface CameraErrorCardProps {
+  reason: CameraErrorReason;
+  onRetry: () => void;
+  onManualEntry: () => void;
+}
+
+// 相機開不起來時，畫面中央的說明卡（設計稿 G）
+function CameraErrorCard({
+  reason,
+  onRetry,
+  onManualEntry,
+}: CameraErrorCardProps) {
+  const { title, description } = CAMERA_ERROR_COPY[reason];
+
+  return (
+    <div className="absolute inset-0 flex items-center justify-center px-6">
+      <div className="flex w-full max-w-sm flex-col items-center rounded-3xl bg-card px-6 py-8 text-center text-card-foreground shadow-2xl">
+        <StatusIcon icon={Camera} badge={X} tone="destructive" />
+
+        <h2 role="alert" className="mt-5 text-lg/7 font-medium text-balance">
+          {title}
+        </h2>
+        <p className="mt-2 text-sm/relaxed text-balance text-muted-foreground">
+          {description}
+        </p>
+
+        <div className="mt-6 flex w-full flex-col gap-3">
+          {reason === "failed" && (
+            <Button onClick={onRetry} className={SHEET_BUTTON_CLASS}>
+              再試一次
+            </Button>
+          )}
+          <Button
+            variant={reason === "failed" ? "outline" : "default"}
+            onClick={onManualEntry}
+            className={
+              reason === "failed"
+                ? SHEET_OUTLINE_BUTTON_CLASS
+                : SHEET_BUTTON_CLASS
+            }
+          >
+            改用手動輸入 ISBN
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }
@@ -278,9 +388,7 @@ function SheetContent({
     case "not-found":
       return (
         <div className="flex flex-col items-center text-center">
-          <div className="flex size-16 items-center justify-center rounded-full bg-muted">
-            <SearchX className="size-7 text-primary" aria-hidden />
-          </div>
+          <StatusIcon icon={BookOpen} badge={Search} tone="primary" />
           <h2 className="mt-4 text-lg font-medium">找不到這本書的資料</h2>
           <p className="mt-1 text-sm text-muted-foreground">
             ISBN {state.isbn}
