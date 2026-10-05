@@ -52,6 +52,8 @@ export interface BookRow {
   status: ReadingStatus;
   updated_at: string;
   isbn13: string | null;
+  publisher: string | null;
+  published_date: string | null;
 }
 
 // 畫面顯示書單用的型別（authors 還原成陣列）
@@ -65,6 +67,12 @@ export interface BookListItem {
   createdAt: string;
   isbn13: string | null;
   noteCount: number;
+}
+
+// 書籍詳情頁用的型別：書單項目 ＋ 只有詳情頁才顯示的出版資訊
+export interface BookDetail extends BookListItem {
+  publisher: string | null;
+  publishedDate: string | null;
 }
 
 // 對應藏書頁的排序下拉選單
