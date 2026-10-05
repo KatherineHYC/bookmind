@@ -2,7 +2,7 @@
 
 import { useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
-import { ScanBarcode } from "lucide-react";
+import { RotateCw, ScanBarcode } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SearchBar from "@/components/features/SearchBar";
 import EmptyState from "@/components/features/EmptyState";
@@ -28,7 +28,7 @@ type SearchState =
   | { status: "idle" }
   | { status: "loading" }
   | { status: "success"; books: Book[] }
-  | { status: "error" };
+  | { status: "error"; keyword: string };
 
 interface AddBookSearchProps {
   addedGoogleBookIds: string[];
@@ -69,7 +69,7 @@ export default function AddBookSearch({
       setState({ status: "success", books });
     } catch {
       if (requestId !== latestRequestRef.current) return;
-      setState({ status: "error" });
+      setState({ status: "error", keyword });
     }
   }
 
@@ -98,7 +98,11 @@ export default function AddBookSearch({
       </div>
 
       <section aria-label="搜尋結果" aria-busy={state.status === "loading"}>
-        <SearchResults state={state} addedIds={addedIds} />
+        <SearchResults
+          state={state}
+          addedIds={addedIds}
+          onRetry={handleSearch}
+        />
       </section>
 
       {isScannerOpen && (
@@ -115,9 +119,10 @@ export default function AddBookSearch({
 interface SearchResultsProps {
   state: SearchState;
   addedIds: ReadonlySet<string>;
+  onRetry: (keyword: string) => void;
 }
 
-function SearchResults({ state, addedIds }: SearchResultsProps) {
+function SearchResults({ state, addedIds, onRetry }: SearchResultsProps) {
   switch (state.status) {
     case "idle":
       return <EmptyState title="輸入書名或掃描書背條碼開始" />;
@@ -126,16 +131,18 @@ function SearchResults({ state, addedIds }: SearchResultsProps) {
       return <BookSearchResultListSkeleton />;
 
     case "error":
-      // 先放最基本的提示，正式版（插圖 + 重新搜尋按鈕）在 D6
       return (
         <EmptyState
           title="暫時無法搜尋"
           description="請確認網路連線後再試一次。"
+          actionLabel="重新搜尋"
+          actionVariant="outline"
+          actionIcon={<RotateCw aria-hidden />}
+          onAction={() => onRetry(state.keyword)}
         />
       );
 
     case "success":
-      // 先放最基本的提示，正式版在 D6
       if (state.books.length === 0) {
         return (
           <EmptyState
