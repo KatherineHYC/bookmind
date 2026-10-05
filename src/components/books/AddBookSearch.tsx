@@ -1,6 +1,9 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
+import dynamic from "next/dynamic";
+import { ScanBarcode } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import SearchBar from "@/components/features/SearchBar";
 import EmptyState from "@/components/features/EmptyState";
 import BookSearchResultCard, {
@@ -9,6 +12,17 @@ import BookSearchResultCard, {
 import { BookSearchResultListSkeleton } from "./BookSearchResultSkeleton";
 import { searchBooks } from "@/lib/google-books";
 import type { Book } from "@/types/book";
+
+const IsbnScanOverlay = dynamic(() => import("./IsbnScanOverlay"), {
+  ssr: false,
+  loading: () => (
+    <div
+      role="status"
+      aria-label="相機啟動中"
+      className="fixed inset-0 z-50 bg-black"
+    />
+  ),
+});
 
 type SearchState =
   | { status: "idle" }
@@ -24,6 +38,7 @@ export default function AddBookSearch({
   addedGoogleBookIds,
 }: AddBookSearchProps) {
   const [state, setState] = useState<SearchState>({ status: "idle" });
+  const [isScannerOpen, setIsScannerOpen] = useState(false);
 
   const addedIds = useMemo(
     () => new Set(addedGoogleBookIds),
@@ -31,6 +46,8 @@ export default function AddBookSearch({
   );
 
   const latestRequestRef = useRef(0);
+
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   async function handleSearch(keyword: string) {
     const requestId = ++latestRequestRef.current;
@@ -56,16 +73,41 @@ export default function AddBookSearch({
     }
   }
 
+  function handleManualEntry() {
+    searchInputRef.current?.focus();
+    setIsScannerOpen(false);
+  }
+
   return (
     <>
-      {/* 搜尋列（D5 的掃描按鈕會放在這一排右側） */}
+      {/* 搜尋列：左邊搜尋框、右邊掃描按鈕 */}
       <div className="mb-4 flex items-center gap-3">
-        <SearchBar onSubmit={handleSearch} className="min-w-0 flex-1" />
+        <SearchBar
+          onSubmit={handleSearch}
+          inputRef={searchInputRef}
+          className="min-w-0 flex-1"
+        />
+        <Button
+          size="icon"
+          onClick={() => setIsScannerOpen(true)}
+          aria-label="掃描書籍條碼"
+          className="size-11 rounded-full"
+        >
+          <ScanBarcode className="size-5" aria-hidden />
+        </Button>
       </div>
 
       <section aria-label="搜尋結果" aria-busy={state.status === "loading"}>
         <SearchResults state={state} addedIds={addedIds} />
       </section>
+
+      {isScannerOpen && (
+        <IsbnScanOverlay
+          addedIds={addedIds}
+          onClose={() => setIsScannerOpen(false)}
+          onManualEntry={handleManualEntry}
+        />
+      )}
     </>
   );
 }
@@ -93,6 +135,7 @@ function SearchResults({ state, addedIds }: SearchResultsProps) {
       );
 
     case "success":
+      // 先放最基本的提示，正式版在 D6
       if (state.books.length === 0) {
         return (
           <EmptyState

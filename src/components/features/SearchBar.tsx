@@ -10,6 +10,7 @@ interface SearchBarProps {
   onSubmit: (value: string) => void;
   placeholder?: string;
   className?: string;
+  inputRef?: React.Ref<HTMLInputElement>;
 }
 
 export default function SearchBar({
@@ -17,6 +18,7 @@ export default function SearchBar({
   onSubmit,
   placeholder = "搜尋書名、作者或 ISBN",
   className,
+  inputRef,
 }: SearchBarProps) {
   const [value, setValue] = useState(defaultValue);
   const isComposingRef = useRef(false);
@@ -34,6 +36,7 @@ export default function SearchBar({
       />
 
       <Input
+        ref={inputRef}
         type="search"
         value={value}
         onChange={(e) => setValue(e.target.value)}
