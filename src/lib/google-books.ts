@@ -1,3 +1,5 @@
+import "client-only";
+
 import type { Book } from "@/types/book";
 
 export interface BookSearchResult {
@@ -16,7 +18,6 @@ export async function searchBooks(
   });
 
   const response = await fetch(`/api/books/search?${params}`);
-
 
   if (!response.ok) {
     const error = await response.json();
