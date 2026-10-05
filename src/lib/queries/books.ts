@@ -5,6 +5,7 @@ import { rowToBookListItem } from "@/lib/book-mapper";
 import type {
   BookListItem,
   BookQuery,
+  BookRow,
   BookRowWithNoteCount,
   BookSort,
   ReadingStatus,
@@ -90,4 +91,21 @@ export async function getBookCount(status?: ReadingStatus): Promise<number> {
   }
 
   return count ?? 0;
+}
+
+// 已加入書單的 Google Books ID 清單；/books/new 用來標示搜尋結果的「已加入」
+export async function getAddedGoogleBookIds(): Promise<string[]> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("books")
+    .select("google_books_id")
+    .overrideTypes<Pick<BookRow, "google_books_id">[], { merge: false }>();
+
+  if (error) {
+    console.error("查詢已加入書籍失敗：", error);
+    return [];
+  }
+
+  return data.map((row) => row.google_books_id);
 }
