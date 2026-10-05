@@ -51,6 +51,8 @@ export default function AddBookButton({
           authors: book.authors,
           coverUrl: book.coverUrl,
           isbn13: book.isbn13,
+          publisher: book.publisher || null,
+          publishedDate: book.publishedDate || null,
         });
 
         if (result.error) setErrorMessage(result.error);
