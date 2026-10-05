@@ -3,6 +3,8 @@
 import { useState } from "react";
 import StatusBadge from "@/components/books/StatusBadge";
 import { BookGridSkeleton } from "@/components/books/BookCardSkeleton";
+import BookGrid from "@/components/books/BookGrid";
+import { MOCK_BOOKS } from "./mock-books";
 import NoteTypeBadge from "@/components/notes/NoteTypeBadge";
 import { NoteListSkeleton } from "@/components/notes/NoteCardSkeleton";
 import EmptyState from "@/components/features/EmptyState";
@@ -12,6 +14,7 @@ import SortSelect from "@/components/features/SortSelect";
 import ConfirmDialog from "@/components/features/ConfirmDialog";
 import FAB from "@/components/layouts/FAB";
 import { Button } from "@/components/ui/button";
+import Container from "@/components/layouts/Container";
 
 function Section({
   title,
@@ -32,13 +35,14 @@ function Section({
 
 const FILTER_OPTIONS = [
   { value: "all", label: "全部" },
-  { value: "reading", label: "正在閱讀" },
+  { value: "reading", label: "閱讀中" },
   { value: "completed", label: "已完成" },
   { value: "want_to_read", label: "想讀" },
 ] as const;
 
 const SORT_OPTIONS = [
-  { value: "newest", label: "最新新增" },
+  { value: "newest", label: "最新" },
+  { value: "oldest", label: "最舊" },
   { value: "title", label: "書名" },
 ] as const;
 
@@ -53,7 +57,7 @@ export default function DevUiClient() {
   const [lastResult, setLastResult] = useState("尚未操作");
 
   return (
-    <div className="mx-auto max-w-3xl px-6 pb-32 pt-8">
+    <Container className="pb-32 pt-8">
       <h1 className="text-2xl font-semibold text-primary">UI 元件驗收</h1>
       <p className="mt-1 text-sm text-muted-foreground">
         僅限開發環境，正式站回傳 404
@@ -75,13 +79,10 @@ export default function DevUiClient() {
       </Section>
 
       <Section title="SearchBar">
-        <SearchBar
-          value={query}
-          onChange={setQuery}
-          placeholder="搜尋書名、作者或 ISBN"
-        />
+        {/* 半受控：打字的狀態住在 SearchBar 裡，按 Enter（或按清除）才把值交出來 */}
+        <SearchBar onSubmit={setQuery} />
         <p className="mt-2 text-xs text-muted-foreground">
-          目前值：{query || "（空）"}
+          最後送出：{query || "（空）"}
         </p>
       </Section>
 
@@ -117,6 +118,10 @@ export default function DevUiClient() {
         />
       </Section>
 
+      <Section title="BookGrid ＋ BookCard（假資料）">
+        <BookGrid books={MOCK_BOOKS} />
+      </Section>
+
       <Section title="Skeleton：書籍 grid">
         <BookGridSkeleton count={3} />
       </Section>
@@ -146,6 +151,6 @@ export default function DevUiClient() {
       </Section>
 
       <FAB href="/books" label="新增書籍" />
-    </div>
+    </Container>
   );
 }
