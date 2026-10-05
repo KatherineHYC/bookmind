@@ -1,8 +1,11 @@
 import FocusPageHeader from "@/components/layouts/FocusPageHeader";
 import Container from "@/components/layouts/Container";
 import AddBookSearch from "@/components/books/AddBookSearch";
+import { getAddedGoogleBookIds } from "@/lib/queries/books";
 
-export default function AddBookPage() {
+export default async function AddBookPage() {
+  const addedGoogleBookIds = await getAddedGoogleBookIds();
+
   return (
     <>
       <FocusPageHeader
@@ -11,7 +14,7 @@ export default function AddBookPage() {
         backHref="/books"
       />
       <Container className="pb-8">
-        <AddBookSearch />
+        <AddBookSearch addedGoogleBookIds={addedGoogleBookIds} />
       </Container>
     </>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import SearchBar from "@/components/features/SearchBar";
 import EmptyState from "@/components/features/EmptyState";
 import BookSearchResultCard, {
@@ -16,8 +16,19 @@ type SearchState =
   | { status: "success"; books: Book[] }
   | { status: "error" };
 
-export default function AddBookSearch() {
+interface AddBookSearchProps {
+  addedGoogleBookIds: string[];
+}
+
+export default function AddBookSearch({
+  addedGoogleBookIds,
+}: AddBookSearchProps) {
   const [state, setState] = useState<SearchState>({ status: "idle" });
+
+  const addedIds = useMemo(
+    () => new Set(addedGoogleBookIds),
+    [addedGoogleBookIds],
+  );
 
   const latestRequestRef = useRef(0);
 
@@ -53,13 +64,18 @@ export default function AddBookSearch() {
       </div>
 
       <section aria-label="搜尋結果" aria-busy={state.status === "loading"}>
-        <SearchResults state={state} />
+        <SearchResults state={state} addedIds={addedIds} />
       </section>
     </>
   );
 }
 
-function SearchResults({ state }: { state: SearchState }) {
+interface SearchResultsProps {
+  state: SearchState;
+  addedIds: ReadonlySet<string>;
+}
+
+function SearchResults({ state, addedIds }: SearchResultsProps) {
   switch (state.status) {
     case "idle":
       return <EmptyState title="輸入書名或掃描書背條碼開始" />;
@@ -90,7 +106,10 @@ function SearchResults({ state }: { state: SearchState }) {
         <ul className={BOOK_SEARCH_LIST_CLASS}>
           {state.books.map((book) => (
             <li key={book.googleBooksId}>
-              <BookSearchResultCard book={book} />
+              <BookSearchResultCard
+                book={book}
+                isAdded={addedIds.has(book.googleBooksId)}
+              />
             </li>
           ))}
         </ul>
