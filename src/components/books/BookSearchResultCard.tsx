@@ -1,5 +1,5 @@
-import { Check } from "lucide-react";
 import BookCover from "./BookCover";
+import AddBookButton from "./AddBookButton";
 import type { Book } from "@/types/book";
 
 // 結果列表的排版：手機單欄、平板以上雙欄（骨架屏共用同一組 class）
@@ -37,13 +37,8 @@ export default function BookSearchResultCard({
         )}
       </div>
 
-      {/* 右側狀態區：已加入顯示標記；未加入先留空，「加入」按鈕在 D4 */}
-      {isAdded && (
-        <span className="inline-flex h-9 shrink-0 items-center gap-1 rounded-lg bg-muted px-3 text-sm text-muted-foreground">
-          <Check className="size-4" aria-hidden />
-          已加入
-        </span>
-      )}
+      {/* 右側操作區：加入 / 加入中 / 已加入 */}
+      <AddBookButton book={book} isAdded={isAdded} />
     </article>
   );
 }
