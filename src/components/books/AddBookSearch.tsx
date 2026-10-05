@@ -1,129 +1,99 @@
 "use client";
 
-import { useState } from "react";
-import IsbnScanner from "./IsbnScanner";
-import { searchBooks, searchByISBN } from "@/lib/google-books";
-import { addBook } from "@/app/actions/books";
+import { useRef, useState } from "react";
+import SearchBar from "@/components/features/SearchBar";
+import EmptyState from "@/components/features/EmptyState";
+import BookSearchResultCard, {
+  BOOK_SEARCH_LIST_CLASS,
+} from "./BookSearchResultCard";
+import { BookSearchResultListSkeleton } from "./BookSearchResultSkeleton";
+import { searchBooks } from "@/lib/google-books";
 import type { Book } from "@/types/book";
 
-type Mode = "idle" | "scanning";
+type SearchState =
+  | { status: "idle" }
+  | { status: "loading" }
+  | { status: "success"; books: Book[] }
+  | { status: "error" };
 
 export default function AddBookSearch() {
-  const [mode, setMode] = useState<Mode>("idle");
-  const [query, setQuery] = useState("");
-  const [results, setResults] = useState<Book[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [addingId, setAddingId] = useState<string | null>(null);
+  const [state, setState] = useState<SearchState>({ status: "idle" });
 
-  async function handleScanSuccess(isbn: string) {
-    setMode("idle");
-    setLoading(true);
-    setError(null);
-    try {
-      const book = await searchByISBN(isbn);
-      setResults(book ? [book] : []);
-      if (!book) setError(`找不到 ISBN ${isbn} 對應的書籍`);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "搜尋發生錯誤");
-    } finally {
-      setLoading(false);
-    }
-  }
+  const latestRequestRef = useRef(0);
 
-  // 手動輸入關鍵字搜尋
-  async function handleManualSearch(e: React.FormEvent) {
-    e.preventDefault();
-    if (!query.trim()) return;
-    setLoading(true);
-    setError(null);
-    try {
-      const result = await searchBooks(query);
-      setResults(result.books);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "搜尋發生錯誤");
-    } finally {
-      setLoading(false);
-    }
-  }
+  async function handleSearch(keyword: string) {
+    const requestId = ++latestRequestRef.current;
 
-  // 點選搜尋結果，加入自己的書單
-  async function handleAdd(book: Book) {
-    setAddingId(book.googleBooksId);
-    setError(null);
-    const result = await addBook({
-      googleBooksId: book.googleBooksId,
-      title: book.title,
-      authors: book.authors,
-      coverUrl: book.coverUrl,
-    });
-    setAddingId(null);
-    if (result?.error) {
-      setError(result.error);
+    if (!keyword) {
+      setState({ status: "idle" });
       return;
     }
-    // 加入成功後從搜尋結果移除，避免重複加入
-    setResults((prev) =>
-      prev.filter((b) => b.googleBooksId !== book.googleBooksId),
-    );
+
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+
+    setState({ status: "loading" });
+
+    try {
+      const { books } = await searchBooks(keyword);
+      if (requestId !== latestRequestRef.current) return;
+      setState({ status: "success", books });
+    } catch {
+      if (requestId !== latestRequestRef.current) return;
+      setState({ status: "error" });
+    }
   }
 
   return (
-    <div className="p-4">
-      {mode === "scanning" ? (
-        <IsbnScanner
-          onScanSuccess={handleScanSuccess}
-          onClose={() => setMode("idle")}
-        />
-      ) : (
-        <form onSubmit={handleManualSearch} className="flex gap-2 mb-4">
-          <input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="輸入書名或作者..."
-            className="flex-1 border rounded-lg px-3 py-2 text-sm"
-          />
-          <button
-            type="submit"
-            className="px-3 py-2 bg-primary text-white rounded-lg text-sm"
-          >
-            搜尋
-          </button>
-          <button
-            type="button"
-            onClick={() => setMode("scanning")}
-            className="px-3 py-2 border rounded-lg text-sm"
-          >
-            📷 掃描
-          </button>
-        </form>
-      )}
+    <>
+      {/* 搜尋列（D5 的掃描按鈕會放在這一排右側） */}
+      <div className="mb-4 flex items-center gap-3">
+        <SearchBar onSubmit={handleSearch} className="min-w-0 flex-1" />
+      </div>
 
-      {loading && <p className="text-sm text-gray-500">搜尋中...</p>}
-      {error && <p className="text-sm text-red-600">{error}</p>}
-
-      <ul className="space-y-2">
-        {results.map((book) => (
-          <li
-            key={book.isbn13 ?? book.googleBooksId}
-            className="border rounded-lg p-3 text-sm flex items-center justify-between gap-2"
-          >
-            <div className="min-w-0">
-              <p className="font-medium truncate">{book.title}</p>
-              <p className="text-gray-500 text-xs truncate">
-                {book.authors.join("、") || "作者不詳"}
-              </p>
-            </div>
-            <button
-              onClick={() => handleAdd(book)}
-              disabled={addingId === book.googleBooksId}
-              className="px-3 py-1.5 bg-primary text-white rounded-lg text-xs shrink-0"
-            >
-              {addingId === book.googleBooksId ? "加入中..." : "+ 加入書單"}
-            </button>
-          </li>
-        ))}
-      </ul>
-    </div>
+      <section aria-label="搜尋結果" aria-busy={state.status === "loading"}>
+        <SearchResults state={state} />
+      </section>
+    </>
   );
+}
+
+function SearchResults({ state }: { state: SearchState }) {
+  switch (state.status) {
+    case "idle":
+      return <EmptyState title="輸入書名或掃描書背條碼開始" />;
+
+    case "loading":
+      return <BookSearchResultListSkeleton />;
+
+    case "error":
+      // 先放最基本的提示，正式版（插圖 + 重新搜尋按鈕）在 D6
+      return (
+        <EmptyState
+          title="暫時無法搜尋"
+          description="請確認網路連線後再試一次。"
+        />
+      );
+
+    case "success":
+      if (state.books.length === 0) {
+        return (
+          <EmptyState
+            title="找不到相關書籍"
+            description="試試其他關鍵字，或改用條碼掃描。"
+          />
+        );
+      }
+
+      return (
+        <ul className={BOOK_SEARCH_LIST_CLASS}>
+          {state.books.map((book) => (
+            <li key={book.googleBooksId}>
+              <BookSearchResultCard book={book} />
+            </li>
+          ))}
+        </ul>
+      );
+  }
 }

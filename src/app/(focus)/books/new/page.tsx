@@ -1,6 +1,6 @@
 import FocusPageHeader from "@/components/layouts/FocusPageHeader";
 import Container from "@/components/layouts/Container";
-import EmptyState from "@/components/features/EmptyState";
+import AddBookSearch from "@/components/books/AddBookSearch";
 
 export default function AddBookPage() {
   return (
@@ -10,8 +10,8 @@ export default function AddBookPage() {
         description="搜尋或掃描條碼，把書加入你的書單。"
         backHref="/books"
       />
-      <Container>
-        <EmptyState title="輸入書名或掃描書背條碼開始" />
+      <Container className="pb-8">
+        <AddBookSearch />
       </Container>
     </>
   );
