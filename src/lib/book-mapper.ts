@@ -1,4 +1,8 @@
-import type { BookListItem, BookRowWithNoteCount } from "@/types/book";
+import type {
+  BookDetail,
+  BookListItem,
+  BookRowWithNoteCount,
+} from "@/types/book";
 
 const AUTHOR_SEPARATOR = "、";
 
@@ -13,6 +17,14 @@ export function rowToBookListItem(row: BookRowWithNoteCount): BookListItem {
     createdAt: row.created_at,
     isbn13: row.isbn13,
     noteCount: row.notes?.[0]?.count ?? 0,
+  };
+}
+
+export function rowToBookDetail(row: BookRowWithNoteCount): BookDetail {
+  return {
+    ...rowToBookListItem(row),
+    publisher: row.publisher,
+    publishedDate: row.published_date,
   };
 }
 

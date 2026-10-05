@@ -19,6 +19,10 @@ interface ConfirmDialogProps {
   confirmLabel?: string;
   cancelLabel?: string;
   destructive?: boolean;
+  // 確認後的動作正在執行：鎖住兩顆按鈕，避免重複送出
+  isPending?: boolean;
+  // 動作失敗時顯示在按鈕上方的錯誤訊息
+  errorMessage?: string | null;
   onConfirm: () => void;
   onCancel?: () => void;
 }
@@ -31,6 +35,8 @@ export default function ConfirmDialog({
   confirmLabel = "確認",
   cancelLabel = "取消",
   destructive = false,
+  isPending = false,
+  errorMessage,
   onConfirm,
   onCancel,
 }: ConfirmDialogProps) {
@@ -43,14 +49,20 @@ export default function ConfirmDialog({
           {description && (
             <AlertDialogDescription>{description}</AlertDialogDescription>
           )}
+          {errorMessage && (
+            <p role="alert" className="text-sm text-destructive">
+              {errorMessage}
+            </p>
+          )}
         </AlertDialogHeader>
 
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={onCancel}>
+          <AlertDialogCancel onClick={onCancel} disabled={isPending}>
             {cancelLabel}
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={onConfirm}
+            disabled={isPending}
             className={
               destructive
                 ? "bg-destructive text-destructive-foreground hover:bg-destructive/90"
