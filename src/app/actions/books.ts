@@ -6,7 +6,10 @@ import { createClient } from "@/lib/supabase/server";
 import { authorsToDbString } from "@/lib/book-mapper";
 import type { ReadingStatus } from "@/types/book";
 
-const DASHBOARD_PATH = "/dashboard";
+const LIBRARY_PATH = "/books";
+const ADD_BOOK_PATH = "/books/new";
+
+const UNIQUE_VIOLATION = "23505";
 
 // 新增書籍的輸入格式驗證
 const addBookSchema = z.object({
@@ -14,6 +17,10 @@ const addBookSchema = z.object({
   title: z.string().min(1),
   authors: z.array(z.string()),
   coverUrl: z.url().nullable(),
+  isbn13: z
+    .string()
+    .regex(/^\d{13}$/)
+    .nullable(),
 });
 
 export type AddBookInput = z.infer<typeof addBookSchema>;
@@ -32,7 +39,7 @@ export async function addBook(input: AddBookInput) {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return { error: "尚未登入，請重新整理頁面再試一次" };
+    return { error: "尚未登入，請重新整理頁面" };
   }
 
   const { error } = await supabase.from("books").insert({
@@ -41,14 +48,16 @@ export async function addBook(input: AddBookInput) {
     title: parsed.data.title,
     authors: authorsToDbString(parsed.data.authors),
     cover_url: parsed.data.coverUrl,
+    isbn13: parsed.data.isbn13,
   });
 
-  if (error) {
+  if (error && error.code !== UNIQUE_VIOLATION) {
     console.error("新增書籍失敗：", error);
-    return { error: "新增書籍失敗，請稍後再試" };
+    return { error: "加入失敗，請稍後再試" };
   }
 
-  revalidatePath(DASHBOARD_PATH);
+  revalidatePath(LIBRARY_PATH);
+  revalidatePath(ADD_BOOK_PATH);
   return { success: true };
 }
 
@@ -63,7 +72,7 @@ export async function deleteBook(id: string) {
     return { error: "刪除失敗，請稍後再試" };
   }
 
-  revalidatePath(DASHBOARD_PATH);
+  revalidatePath(LIBRARY_PATH);
   return { success: true };
 }
 
@@ -81,6 +90,6 @@ export async function updateBookStatus(id: string, status: ReadingStatus) {
     return { error: "更新失敗，請稍後再試" };
   }
 
-  revalidatePath(DASHBOARD_PATH);
+  revalidatePath(LIBRARY_PATH);
   return { success: true };
 }
