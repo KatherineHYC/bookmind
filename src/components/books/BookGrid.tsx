@@ -2,7 +2,7 @@ import type { BookListItem } from "@/types/book";
 import BookCard from "./BookCard";
 
 export const BOOK_GRID_CLASS =
-  "grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4";
+  "grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-5";
 
 export default function BookGrid({ books }: { books: BookListItem[] }) {
   return (

@@ -14,6 +14,7 @@ import SortSelect from "@/components/features/SortSelect";
 import ConfirmDialog from "@/components/features/ConfirmDialog";
 import FAB from "@/components/layouts/FAB";
 import { Button } from "@/components/ui/button";
+import Container from "@/components/layouts/Container";
 
 function Section({
   title,
@@ -56,7 +57,7 @@ export default function DevUiClient() {
   const [lastResult, setLastResult] = useState("尚未操作");
 
   return (
-    <div className="mx-auto max-w-3xl px-6 pb-32 pt-8">
+    <Container className="pb-32 pt-8">
       <h1 className="text-2xl font-semibold text-primary">UI 元件驗收</h1>
       <p className="mt-1 text-sm text-muted-foreground">
         僅限開發環境，正式站回傳 404
@@ -150,6 +151,6 @@ export default function DevUiClient() {
       </Section>
 
       <FAB href="/books" label="新增書籍" />
-    </div>
+    </Container>
   );
 }

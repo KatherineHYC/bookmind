@@ -14,7 +14,7 @@ export default function BookCover({ coverUrl, title }: BookCoverProps) {
           src={coverUrl}
           alt={`《${title}》封面`}
           fill
-          sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw"
+          sizes="170px"
           className="object-cover"
         />
       ) : (
