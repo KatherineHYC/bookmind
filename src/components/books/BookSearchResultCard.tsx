@@ -2,8 +2,7 @@ import BookCover from "./BookCover";
 import AddBookButton from "./AddBookButton";
 import type { Book } from "@/types/book";
 
-// 結果列表的排版：手機單欄、平板以上雙欄（骨架屏共用同一組 class）
-export const BOOK_SEARCH_LIST_CLASS = "grid gap-3 md:grid-cols-2";
+export const BOOK_SEARCH_LIST_CLASS = "grid gap-3 grid-cols-1 md:grid-cols-2";
 
 interface BookSearchResultCardProps {
   book: Book;
