@@ -138,7 +138,7 @@ export default function IsbnScanOverlay({
         onClick={onClose}
         aria-label="關閉掃描"
         autoFocus
-        className="absolute top-[calc(env(safe-area-inset-top)+0.75rem)] right-4 flex size-11 items-center justify-center rounded-full bg-black/50 text-white"
+        className="absolute z-10 top-[calc(env(safe-area-inset-top)+0.75rem)] right-4 flex size-11 items-center justify-center rounded-full bg-black/50 text-white"
       >
         <X className="size-6" aria-hidden />
       </button>
