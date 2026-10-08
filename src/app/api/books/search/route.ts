@@ -1,6 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import type { GoogleBookVolume, Book } from "@/types/book";
 
+function normalizeCoverUrl(raw: string | undefined): string | null {
+  if (!raw) return null;
+
+  try {
+    const url = new URL(raw);
+    url.protocol = "https:";
+    url.searchParams.delete("edge");
+    return url.toString();
+  } catch {
+    return null;
+  }
+}
+
 // 將 Google 原始資料轉換成 BookMind 內部格式
 function transformBook(volume: GoogleBookVolume): Book {
   const info = volume.volumeInfo;
@@ -14,8 +27,7 @@ function transformBook(volume: GoogleBookVolume): Book {
       ?.identifier ?? null;
 
   // 書籍封面縮圖
-  const rawCover = info.imageLinks?.thumbnail ?? null;
-  const coverUrl = rawCover ? rawCover.replace("http://", "https://") : null;
+  const coverUrl = normalizeCoverUrl(info.imageLinks?.thumbnail);
 
   return {
     googleBooksId: volume.id,
