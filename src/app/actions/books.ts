@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { authorsToDbString } from "@/lib/book-mapper";
-import { isReadingStatus } from "@/lib/book-status";
+import { isReadingStatus, READING_STATUSES } from "@/lib/book-status";
 import { isUuid } from "@/lib/uuid";
 import type { ReadingStatus } from "@/types/book";
 
@@ -31,6 +31,7 @@ const addBookSchema = z.object({
     .nullable(),
   publisher: z.string().nullable(),
   publishedDate: z.string().nullable(),
+  status: z.enum(READING_STATUSES),
 });
 
 export type AddBookInput = z.infer<typeof addBookSchema>;
@@ -61,6 +62,7 @@ export async function addBook(input: AddBookInput) {
     isbn13: parsed.data.isbn13,
     publisher: parsed.data.publisher,
     published_date: parsed.data.publishedDate,
+    status: parsed.data.status,
   });
 
   if (error && error.code !== UNIQUE_VIOLATION) {

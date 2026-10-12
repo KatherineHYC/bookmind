@@ -10,7 +10,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import AddBookButton from "./AddBookButton";
+import AddBookPanel from "./AddBookPanel";
 import BookCover from "./BookCover";
 import IsbnScanner, { type CameraErrorReason } from "./IsbnScanner";
 import { searchByISBN } from "@/lib/google-books";
@@ -372,7 +372,7 @@ function SheetContent({
           </div>
 
           <div className="flex flex-col gap-3">
-            <AddBookButton book={book} isAdded={isAdded} variant="full" />
+            <AddBookPanel book={book} isAdded={isAdded} />
             <Button
               variant="outline"
               onClick={onRescan}

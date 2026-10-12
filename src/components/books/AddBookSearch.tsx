@@ -6,6 +6,7 @@ import { RotateCw, ScanBarcode } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SearchBar from "@/components/features/SearchBar";
 import EmptyState from "@/components/features/EmptyState";
+import BookPreviewSheet from "./BookPreviewSheet";
 import BookSearchResultCard, {
   BOOK_SEARCH_LIST_CLASS,
 } from "./BookSearchResultCard";
@@ -40,6 +41,9 @@ export default function AddBookSearch({
   const [state, setState] = useState<SearchState>({ status: "idle" });
   const [isScannerOpen, setIsScannerOpen] = useState(false);
 
+  const [previewBook, setPreviewBook] = useState<Book | null>(null);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+
   const addedIds = useMemo(
     () => new Set(addedGoogleBookIds),
     [addedGoogleBookIds],
@@ -73,6 +77,11 @@ export default function AddBookSearch({
     }
   }
 
+  function handleSelectBook(book: Book) {
+    setPreviewBook(book);
+    setIsPreviewOpen(true);
+  }
+
   function handleManualEntry() {
     searchInputRef.current?.focus();
     setIsScannerOpen(false);
@@ -102,8 +111,16 @@ export default function AddBookSearch({
           state={state}
           addedIds={addedIds}
           onRetry={handleSearch}
+          onSelect={handleSelectBook}
         />
       </section>
+
+      <BookPreviewSheet
+        book={previewBook}
+        open={isPreviewOpen}
+        isAdded={previewBook ? addedIds.has(previewBook.googleBooksId) : false}
+        onOpenChange={setIsPreviewOpen}
+      />
 
       {isScannerOpen && (
         <IsbnScanOverlay
@@ -120,9 +137,15 @@ interface SearchResultsProps {
   state: SearchState;
   addedIds: ReadonlySet<string>;
   onRetry: (keyword: string) => void;
+  onSelect: (book: Book) => void;
 }
 
-function SearchResults({ state, addedIds, onRetry }: SearchResultsProps) {
+function SearchResults({
+  state,
+  addedIds,
+  onRetry,
+  onSelect,
+}: SearchResultsProps) {
   switch (state.status) {
     case "idle":
       return <EmptyState title="輸入書名或掃描書背條碼開始" />;
@@ -159,6 +182,7 @@ function SearchResults({ state, addedIds, onRetry }: SearchResultsProps) {
               <BookSearchResultCard
                 book={book}
                 isAdded={addedIds.has(book.googleBooksId)}
+                onSelect={onSelect}
               />
             </li>
           ))}
