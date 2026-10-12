@@ -14,6 +14,30 @@ function normalizeCoverUrl(raw: string | undefined): string | null {
   }
 }
 
+// Google 的簡介常夾帶 HTML 標籤（<br>、<p>、<b>），轉成純文字才能直接顯示
+function toPlainText(html: string | undefined): string {
+  if (!html) return "";
+
+  return (
+    html
+      // 換行類的標籤先換成真正的換行
+      .replace(/<br\s*\/?>/gi, "\n")
+      .replace(/<\/p>/gi, "\n")
+      // 其他標籤全部拿掉
+      .replace(/<[^>]+>/g, "")
+      // 常見的 HTML 特殊字元還原
+      .replace(/&nbsp;/g, " ")
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
+      .replace(/&amp;/g, "&")
+      // 連續三個以上的換行縮成一個空行
+      .replace(/\n{3,}/g, "\n\n")
+      .trim()
+  );
+}
+
 // 將 Google 原始資料轉換成 BookMind 內部格式
 function transformBook(volume: GoogleBookVolume): Book {
   const info = volume.volumeInfo;
@@ -33,7 +57,7 @@ function transformBook(volume: GoogleBookVolume): Book {
     googleBooksId: volume.id,
     title: info.title,
     authors: info.authors ?? [],
-    description: info.description ?? "",
+    description: toPlainText(info.description),
     publisher: info.publisher ?? "",
     publishedDate: info.publishedDate ?? "",
     pageCount: info.pageCount ?? null,
