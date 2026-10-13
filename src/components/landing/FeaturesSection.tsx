@@ -1,5 +1,7 @@
+import Image from "next/image";
 import { Library, PenLine, Tag, Sprout, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import brushStroke from "@/assets/illustrations/deco-brush-1.webp";
 
 // 卡片資料：icon、標題、說明文字、底色 tone
 const FEATURES: Array<{
@@ -72,6 +74,12 @@ export default function FeaturesSection() {
         <h2 className="text-center text-xl/loose font-medium tracking-widest text-foreground">
           為閱讀而生的筆記空間
         </h2>
+        <Image
+          src={brushStroke}
+          alt=""
+          sizes="160px"
+          className="mx-auto mt-1 w-40"
+        />
 
         <div className="mt-8 grid grid-cols-2 gap-x-4 gap-y-8">
           {FEATURES.map((feature) => (
