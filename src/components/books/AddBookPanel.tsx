@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { Check, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import ReadingStatusPicker from "./ReadingStatusPicker";
 import { addBook } from "@/app/actions/books";
 import type { Book, ReadingStatus } from "@/types/book";
@@ -72,7 +73,11 @@ export default function AddBookPanel({
           onClick={handleAdd}
           disabled={isPending}
           aria-label={isPending ? "加入中" : undefined}
-          className="h-12 w-full text-base disabled:opacity-100"
+          className={cn(
+            "h-12 w-full text-base disabled:opacity-100",
+            "duration-200 ease-out hover:-translate-y-0.5 hover:shadow-[0_10px_20px_-8px_rgb(48_68_48/0.55)]",
+            "motion-reduce:hover:translate-y-0",
+          )}
         >
           {isPending ? (
             <Loader2 className="size-5 animate-spin" aria-hidden />
