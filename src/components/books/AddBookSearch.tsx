@@ -2,7 +2,7 @@
 
 import { useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
-import { RotateCw, ScanBarcode } from "lucide-react";
+import { CircleAlert, RotateCw, ScanBarcode } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SearchBar from "@/components/features/SearchBar";
 import EmptyState from "@/components/features/EmptyState";
@@ -13,6 +13,9 @@ import BookSearchResultCard, {
 import { BookSearchResultListSkeleton } from "./BookSearchResultSkeleton";
 import { searchBooks } from "@/lib/google-books";
 import type { Book } from "@/types/book";
+import spotNotFound from "@/assets/illustrations/spot-not-found.webp";
+import spotSearchError from "@/assets/illustrations/spot-search-error.webp";
+import spotSearchStart from "@/assets/illustrations/spot-search-start.webp";
 
 const IsbnScanOverlay = dynamic(() => import("./IsbnScanOverlay"), {
   ssr: false,
@@ -148,7 +151,12 @@ function SearchResults({
 }: SearchResultsProps) {
   switch (state.status) {
     case "idle":
-      return <EmptyState title="輸入書名或掃描書背條碼開始" />;
+      return (
+        <EmptyState
+          title="輸入書名或掃描書背條碼開始"
+          illustration={spotSearchStart}
+        />
+      );
 
     case "loading":
       return <BookSearchResultListSkeleton />;
@@ -158,6 +166,10 @@ function SearchResults({
         <EmptyState
           title="暫時無法搜尋"
           description="請確認網路連線後再試一次。"
+          illustration={spotSearchError}
+          illustrationBadge={
+            <CircleAlert className="size-8 text-accent-foreground" />
+          }
           actionLabel="重新搜尋"
           actionVariant="outline"
           actionIcon={<RotateCw aria-hidden />}
@@ -171,6 +183,7 @@ function SearchResults({
           <EmptyState
             title="找不到相關書籍"
             description="試試其他關鍵字，或改用條碼掃描。"
+            illustration={spotNotFound}
           />
         );
       }
