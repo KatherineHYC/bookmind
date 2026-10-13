@@ -33,6 +33,7 @@ html {
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-surface-sand: var(--surface-sand);
+  --color-sage-deep: var(--sage-deep);
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
   --color-card: var(--card);
@@ -74,6 +75,7 @@ html {
   --popover-foreground: #352e22;
   --muted: #ede8de;
   --surface-sand: #e6e2d6;
+  --sage-deep: #66715c;
   --muted-foreground: #6b6257;
   --border: #ddd5c4;
   --input: #ddd5c4;
