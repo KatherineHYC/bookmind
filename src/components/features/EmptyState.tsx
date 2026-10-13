@@ -1,15 +1,15 @@
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-const ILLUSTRATION_WIDTH = 320;
-const ILLUSTRATION_HEIGHT = 240;
+const ILLUSTRATION_SIZES = "(min-width: 768px) 224px, 192px";
 
 interface EmptyStateProps {
   title: string;
   description?: string;
-  illustration?: string;
+  illustration?: StaticImageData;
+  illustrationBadge?: React.ReactNode;
   actionLabel?: string;
   actionHref?: string;
   onAction?: () => void;
@@ -23,6 +23,7 @@ export default function EmptyState({
   title,
   description,
   illustration,
+  illustrationBadge,
   actionLabel,
   actionHref,
   onAction,
@@ -39,17 +40,22 @@ export default function EmptyState({
 
   return (
     <div className="flex flex-col items-center px-6 py-12 text-center">
-      <div className="w-48 md:w-56">
+      <div className="relative w-48 md:w-56">
         {illustration ? (
           <Image
             src={illustration}
             alt=""
-            width={ILLUSTRATION_WIDTH}
-            height={ILLUSTRATION_HEIGHT}
+            sizes={ILLUSTRATION_SIZES}
             className="h-auto w-full"
           />
         ) : (
           <div className="aspect-4/3 w-full rounded-lg bg-muted" aria-hidden />
+        )}
+
+        {illustrationBadge && (
+          <div className="absolute top-[12%] right-[10%]" aria-hidden>
+            {illustrationBadge}
+          </div>
         )}
       </div>
 
