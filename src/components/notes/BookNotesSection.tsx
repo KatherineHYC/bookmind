@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import EmptyState from "@/components/features/EmptyState";
 import BookNoteCard from "./BookNoteCard";
 import type { Note } from "@/types/note";
+import spotOpenBook from "@/assets/illustrations/spot-open-book.webp";
 
 // 新增筆記頁的網址（頁面本身在筆記階段才會建立）
 function newNotePath(bookId: string) {
@@ -51,6 +52,7 @@ export default function BookNotesSection({
       {notes.length === 0 ? (
         <EmptyState
           title="還沒有這本書的筆記"
+          illustration={spotOpenBook}
           actionLabel="記下第一個靈感"
           actionHref={newNoteHref}
         />

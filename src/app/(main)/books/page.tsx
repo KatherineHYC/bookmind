@@ -8,6 +8,9 @@ import BookToolbar from "@/components/books/BookToolbar";
 import { getBooks } from "@/lib/queries/books";
 import { parseBookFilters, type BookFilters } from "@/lib/book-filters";
 import FAB from "@/components/layouts/FAB";
+import headerLibrary from "@/assets/illustrations/header-library.webp";
+import spotNotFound from "@/assets/illustrations/spot-not-found.webp";
+import spotSearchStart from "@/assets/illustrations/spot-search-start.webp";
 
 interface LibraryPageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -24,11 +27,16 @@ async function BookResults({ filters }: { filters: BookFilters }) {
 
   if (books.length === 0) {
     return isFiltered ? (
-      <EmptyState title="找不到符合的書" description="換個篩選條件試試。" />
+      <EmptyState
+        title="找不到符合的書"
+        description="換個篩選條件試試。"
+        illustration={spotNotFound}
+      />
     ) : (
       <EmptyState
         title="書架還空著"
         description="加入第一本書，開始你的閱讀紀錄。"
+        illustration={spotSearchStart}
         actionLabel="新增書籍"
         actionHref="/books/new"
       />
@@ -55,6 +63,7 @@ export default async function LibraryPage({ searchParams }: LibraryPageProps) {
       <PageHeader
         title="藏書"
         subtitle="收藏與整理你的書籍，讓閱讀更有方向。"
+        illustration={headerLibrary}
       />
       <Container className="pb-8">
         <BookToolbar filters={filters} />

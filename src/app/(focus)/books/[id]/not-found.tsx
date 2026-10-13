@@ -1,6 +1,7 @@
 import FocusPageHeader from "@/components/layouts/FocusPageHeader";
 import Container from "@/components/layouts/Container";
 import EmptyState from "@/components/features/EmptyState";
+import spotNotFound from "@/assets/illustrations/spot-not-found.webp";
 
 // 找不到書籍：只留返回鍵，不顯示刪除按鈕
 export default function BookNotFound() {
@@ -11,6 +12,7 @@ export default function BookNotFound() {
         <EmptyState
           title="找不到這本書"
           description="它可能已經被刪除了"
+          illustration={spotNotFound}
           actionLabel="回到藏書"
           actionHref="/books"
         />

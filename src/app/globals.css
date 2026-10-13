@@ -32,6 +32,7 @@ html {
   --color-muted-foreground: var(--muted-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
+  --color-surface-sand: var(--surface-sand);
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
   --color-card: var(--card);
@@ -72,6 +73,7 @@ html {
   --popover: #fefcf8;
   --popover-foreground: #352e22;
   --muted: #ede8de;
+  --surface-sand: #e6e2d6;
   --muted-foreground: #6b6257;
   --border: #ddd5c4;
   --input: #ddd5c4;

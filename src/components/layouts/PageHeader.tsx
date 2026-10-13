@@ -1,15 +1,13 @@
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import Container from "./Container";
 import Logo from "./Logo";
 
-const ILLUSTRATION_WIDTH = 400;
-const ILLUSTRATION_HEIGHT = 300;
 const ILLUSTRATION_SIZES = "(min-width: 768px) 256px, 160px";
 
 interface PageHeaderProps {
   title: string;
   subtitle?: string;
-  illustration?: string;
+  illustration?: StaticImageData;
   decoration?: "green" | "brown";
 }
 
@@ -41,10 +39,8 @@ export default function PageHeader({
               <Image
                 src={illustration}
                 alt=""
-                width={ILLUSTRATION_WIDTH}
-                height={ILLUSTRATION_HEIGHT}
                 sizes={ILLUSTRATION_SIZES}
-                priority
+                loading="eager"
                 className="h-auto w-full"
               />
             ) : (

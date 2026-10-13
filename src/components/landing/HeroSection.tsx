@@ -1,12 +1,32 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import heroLanding from "@/assets/illustrations/hero-landing.webp";
+import leafShadow from "@/assets/illustrations/deco-leaf-shadow.webp";
 
 export default function HeroSection() {
   return (
-    <section className="isolate">
+    <section className="relative isolate overflow-hidden">
+      {/* 左上角葉影：純裝飾，淡淡疊在背景上 */}
+      <Image
+        src={leafShadow}
+        alt=""
+        sizes="224px"
+        className="pointer-events-none absolute top-0 left-0 -z-10 w-56 opacity-60"
+      />
+
       <div className="mx-auto w-full max-w-md px-6 py-9 text-center">
         <h1 className="text-6xl/tight font-semibold text-primary">BookMind</h1>
 
+        {/* 主視覺：直式排在按鈕下方，手機上不會和文字擠在一起 */}
+        <Image
+          src={heroLanding}
+          alt=""
+          sizes="256px"
+          loading="eager"
+          fetchPriority="high"
+          className="mx-auto mt-10 w-64"
+        />
         <h2 className="mt-7 whitespace-nowrap text-2xl/loose font-medium tracking-wider text-foreground">
           將字裡行間的靈感記錄下來
         </h2>
