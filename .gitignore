@@ -44,3 +44,8 @@ next-env.d.ts
 scripts/strip-private-notes.mjs
 scripts/install-private-notes.mjs
 scripts/check-private-notes-staged.mjs
+
+
+# 插圖原圖與預覽頁
+/design/illustrations-src/
+/design/illustrations-preview.html
