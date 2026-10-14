@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
+import { redirect, RedirectType } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { noteInputSchema, type NoteInput } from "@/lib/note-schema";
 import { isUuid } from "@/lib/uuid";
@@ -53,5 +53,5 @@ export async function createNote(bookId: string, input: NoteInput) {
   revalidatePath(bookDetailPath(bookId));
   revalidatePath(NOTES_PATH);
 
-  redirect(bookDetailPath(bookId));
+  redirect(bookDetailPath(bookId), RedirectType.replace);
 }
