@@ -8,6 +8,8 @@ export interface NoteRow {
   user_id: string;
   book_id: string;
   type: NoteType;
+  title: string | null;
+  page: number | null;
   excerpt: string | null;
   content: string | null;
   updated_at: string;
@@ -17,20 +19,23 @@ export interface NoteRow {
 interface NoteBase {
   id: string;
   bookId: string;
+  title: string | null;
   createdAt: string;
   updatedAt: string;
 }
 
-// 摘錄：一定有原文，感想選填
+// 摘錄：一定有原文，頁碼、感想選填
 export interface ExcerptNote extends NoteBase {
   type: "excerpt";
+  page: number | null;
   excerpt: string;
   content: string | null;
 }
 
-// 心得：一定有內容，且不可能有原文
+// 心得：一定有內容，且不可能有原文與頁碼
 export interface ThoughtNote extends NoteBase {
   type: "thought";
+  page: null;
   excerpt: null;
   content: string;
 }
