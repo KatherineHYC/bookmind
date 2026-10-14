@@ -9,6 +9,7 @@ export function rowToNote(row: NoteRow): Note {
   const base = {
     id: row.id,
     bookId: row.book_id,
+    title: row.title,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };
@@ -20,6 +21,7 @@ export function rowToNote(row: NoteRow): Note {
     return {
       ...base,
       type: "excerpt",
+      page: row.page,
       excerpt: row.excerpt,
       content: row.content,
     };
@@ -32,6 +34,7 @@ export function rowToNote(row: NoteRow): Note {
   return {
     ...base,
     type: "thought",
+    page: null,
     excerpt: null,
     content: row.content,
   };
