@@ -6,7 +6,7 @@ import BookNoteCard from "./BookNoteCard";
 import type { Note } from "@/types/note";
 import spotOpenBook from "@/assets/illustrations/spot-open-book.webp";
 
-// 新增筆記頁的網址（頁面本身在筆記階段才會建立）
+// 新增筆記頁的網址
 function newNotePath(bookId: string) {
   return `/books/${bookId}/notes/new`;
 }
