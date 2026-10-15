@@ -4,6 +4,7 @@ import { Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import FocusPageHeader from "@/components/layouts/FocusPageHeader";
 import Container from "@/components/layouts/Container";
+import DeleteNoteButton from "@/components/notes/DeleteNoteButton";
 import NoteDetail from "@/components/notes/NoteDetail";
 import NoteSourceLink from "@/components/notes/NoteSourceLink";
 import { getNoteById } from "@/lib/queries/notes";
@@ -42,6 +43,7 @@ export default async function NoteDetailPage({
             >
               <Pencil className="size-5" aria-hidden />
             </Button>
+            <DeleteNoteButton noteId={note.id} origin={origin} />
           </div>
         }
       />
