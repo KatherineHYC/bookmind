@@ -48,3 +48,14 @@ export interface NoteWithBookRow extends NoteRow {
 }
 
 export type NoteWithBook = Note & { bookTitle: string };
+
+// 筆記詳情頁用：嵌入所屬書籍的書名與作者（DB 原始格式）
+export interface NoteDetailRow extends NoteRow {
+  books: { title: string; authors: string } | null;
+}
+
+// 筆記詳情頁用的型別：筆記 ＋「出自」那一行要顯示的書籍資訊
+export type NoteDetail = Note & {
+  bookTitle: string;
+  bookAuthors: string[];
+};
