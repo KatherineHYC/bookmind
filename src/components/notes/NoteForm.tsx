@@ -11,7 +11,6 @@ import AutoGrowTextarea from "@/components/features/AutoGrowTextarea";
 import ConfirmDialog from "@/components/features/ConfirmDialog";
 import SegmentedControl from "@/components/features/SegmentedControl";
 import NoteFormHeader from "./NoteFormHeader";
-import { createNote } from "@/app/actions/notes";
 import {
   EMPTY_NOTE_FORM,
   noteFormSchema,
@@ -38,13 +37,52 @@ function FieldError({ id, message }: { id: string; message?: string }) {
   );
 }
 
+type NoteFormMode = "create" | "edit";
+
+// 兩種模式只差在畫面上的文字
+const MODE_COPY: Record<
+  NoteFormMode,
+  {
+    heading: string;
+    submitLabel: string;
+    discardTitle: string;
+    discardDescription: string;
+  }
+> = {
+  create: {
+    heading: "新增筆記",
+    submitLabel: "儲存筆記",
+    discardTitle: "放棄這則筆記？",
+    discardDescription: "已輸入的內容不會被儲存。",
+  },
+  edit: {
+    heading: "編輯筆記",
+    submitLabel: "儲存變更",
+    discardTitle: "放棄這次的修改？",
+    discardDescription: "修改的內容不會被儲存，筆記會維持原樣。",
+  },
+};
+
+// 成功時 Server Action 會直接 redirect，所以只有失敗才會回傳東西
+type SaveNoteAction = (input: NoteInput) => Promise<{ error: string } | void>;
+
 interface NoteFormProps {
-  bookId: string;
+  mode: NoteFormMode;
+  // 存檔要呼叫的 Server Action：表單只管「把驗證好的內容交出去」，不管交給誰
+  action: SaveNoteAction;
+  // 按返回、或確認放棄時要回去的地方
+  backHref: string;
+  defaultValues?: NoteFormValues;
 }
 
-export default function NoteForm({ bookId }: NoteFormProps) {
+export default function NoteForm({
+  mode,
+  action,
+  backHref,
+  defaultValues = EMPTY_NOTE_FORM,
+}: NoteFormProps) {
   const router = useRouter();
-  const backHref = `/books/${bookId}`;
+  const copy = MODE_COPY[mode];
 
   const [isPending, startTransition] = useTransition();
   const [serverError, setServerError] = useState<string | null>(null);
@@ -57,7 +95,7 @@ export default function NoteForm({ bookId }: NoteFormProps) {
     formState: { errors, isDirty },
   } = useForm<NoteFormValues, unknown, NoteInput>({
     resolver: zodResolver(noteFormSchema),
-    defaultValues: EMPTY_NOTE_FORM,
+    defaultValues,
   });
 
   const [type, page, title, excerpt, content] = useWatch({
@@ -94,7 +132,7 @@ export default function NoteForm({ bookId }: NoteFormProps) {
     setServerError(null);
 
     startTransition(async () => {
-      const result = await createNote(bookId, values);
+      const result = await action(values);
       if (result?.error) setServerError(result.error);
     });
   }
@@ -108,7 +146,7 @@ export default function NoteForm({ bookId }: NoteFormProps) {
         noValidate
         className="flex min-h-dvh flex-col"
       >
-        <NoteFormHeader title="新增筆記" onBack={handleBack} />
+        <NoteFormHeader title={copy.heading} onBack={handleBack} />
 
         <fieldset disabled={isPending} className="min-w-0 flex-1">
           <Container className="pb-8 md:max-w-2xl lg:max-w-2xl">
@@ -268,7 +306,7 @@ export default function NoteForm({ bookId }: NoteFormProps) {
                   儲存中⋯
                 </>
               ) : (
-                "儲存筆記"
+                copy.submitLabel
               )}
             </Button>
           </Container>
@@ -278,8 +316,8 @@ export default function NoteForm({ bookId }: NoteFormProps) {
       <ConfirmDialog
         open={isDiscardOpen}
         onOpenChange={setIsDiscardOpen}
-        title="放棄這則筆記？"
-        description="已輸入的內容不會被儲存。"
+        title={copy.discardTitle}
+        description={copy.discardDescription}
         confirmLabel="放棄"
         cancelLabel="繼續編輯"
         destructive
