@@ -34,7 +34,7 @@ export default async function NoteDetailPage({
         action={
           <div className="-mr-3 flex items-center">
             <Button
-              render={<Link href={noteEditPath(note.id, origin)} />}
+              render={<Link href={noteEditPath(note.id, origin)} replace />}
               nativeButton={false}
               variant="ghost"
               size="icon"
