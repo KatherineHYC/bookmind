@@ -7,23 +7,47 @@ import {
   rowToNoteWithBook,
 } from "@/lib/note-mapper";
 import { isUuid } from "@/lib/uuid";
+import { sanitizeKeyword } from "./sanitize-keyword";
 import type {
   Note,
   NoteDetail,
   NoteDetailRow,
+  NoteQuery,
   NoteRow,
+  NoteSort,
   NoteWithBook,
   NoteWithBookRow,
 } from "@/types/note";
 
-// 取得目前使用者的所有筆記（含所屬書名），最新的在前
-export async function getNotes(): Promise<NoteWithBook[]> {
+const SORT_COLUMN: Record<NoteSort, { column: string; ascending: boolean }> = {
+  updated: { column: "updated_at", ascending: false },
+  newest: { column: "created_at", ascending: false },
+  oldest: { column: "created_at", ascending: true },
+};
+
+// 筆記主頁主查詢：類型 ＋ 關鍵字 ＋ 排序自由組合（含所屬書名）
+export async function getNotes({
+  type,
+  keyword,
+  sort = "updated",
+}: NoteQuery = {}): Promise<NoteWithBook[]> {
   const supabase = await createClient();
 
-  const { data, error } = await supabase
-    .from("notes")
-    .select("*, books(title)")
-    .order("created_at", { ascending: false })
+  let query = supabase.from("notes").select("*, books(title)");
+
+  if (type) query = query.eq("type", type);
+
+  const safeKeyword = keyword ? sanitizeKeyword(keyword) : "";
+  if (safeKeyword) {
+    query = query.or(
+      `title.ilike.%${safeKeyword}%,excerpt.ilike.%${safeKeyword}%,content.ilike.%${safeKeyword}%`,
+    );
+  }
+
+  const { column, ascending } = SORT_COLUMN[sort];
+
+  const { data, error } = await query
+    .order(column, { ascending })
     .overrideTypes<NoteWithBookRow[], { merge: false }>();
 
   if (error) {
@@ -32,6 +56,23 @@ export async function getNotes(): Promise<NoteWithBook[]> {
   }
 
   return data.map(rowToNoteWithBook);
+}
+
+// 目前使用者有沒有任何筆記（決定筆記主頁要不要顯示工具列與「還沒有任何筆記」）
+export async function hasAnyNote(): Promise<boolean> {
+  const supabase = await createClient();
+
+  const { count, error } = await supabase
+    .from("notes")
+    .select("id", { count: "exact", head: true })
+    .limit(1);
+
+  if (error) {
+    console.error("查詢筆記數量失敗：", error);
+    return true;
+  }
+
+  return (count ?? 0) > 0;
 }
 
 // 取得某一本書的所有筆記，最新的在前（書籍詳情頁用）

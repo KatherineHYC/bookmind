@@ -18,7 +18,7 @@ export default function NoteCardSkeleton() {
 
 export function NoteListSkeleton({ count = 4 }: { count?: number }) {
   return (
-    <div className="space-y-4">
+    <div className="grid gap-3 md:grid-cols-2">
       {Array.from({ length: count }, (_, i) => (
         <NoteCardSkeleton key={i} />
       ))}

@@ -43,6 +43,16 @@ export interface ThoughtNote extends NoteBase {
 // 應用層的筆記型別（對應 DB 的 CHECK 約束）
 export type Note = ExcerptNote | ThoughtNote;
 
+// 對應筆記主頁的排序下拉選單
+export type NoteSort = "updated" | "newest" | "oldest";
+
+// 筆記主頁的查詢條件，全部選填（不給就是「全部筆記、最新更新在前」）
+export interface NoteQuery {
+  type?: NoteType;
+  keyword?: string;
+  sort?: NoteSort;
+}
+
 export interface NoteWithBookRow extends NoteRow {
   books: { title: string } | null;
 }
