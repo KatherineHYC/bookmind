@@ -6,12 +6,17 @@ import type {
 
 const AUTHOR_SEPARATOR = "、";
 
+// DB 存的是「、」串起來的字串 → 還原成陣列；筆記詳情頁的「出自」也會用到
+export function authorsFromDbString(authors: string): string[] {
+  return authors ? authors.split(AUTHOR_SEPARATOR) : [];
+}
+
 export function rowToBookListItem(row: BookRowWithNoteCount): BookListItem {
   return {
     id: row.id,
     googleBooksId: row.google_books_id,
     title: row.title,
-    authors: row.authors ? row.authors.split(AUTHOR_SEPARATOR) : [],
+    authors: authorsFromDbString(row.authors),
     coverUrl: row.cover_url,
     status: row.status,
     createdAt: row.created_at,

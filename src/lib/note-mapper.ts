@@ -1,5 +1,8 @@
+import { authorsFromDbString } from "@/lib/book-mapper";
 import type {
   Note,
+  NoteDetail,
+  NoteDetailRow,
   NoteRow,
   NoteWithBook,
   NoteWithBookRow,
@@ -44,5 +47,13 @@ export function rowToNoteWithBook(row: NoteWithBookRow): NoteWithBook {
   return {
     ...rowToNote(row),
     bookTitle: row.books?.title ?? "未知書籍",
+  };
+}
+
+export function rowToNoteDetail(row: NoteDetailRow): NoteDetail {
+  return {
+    ...rowToNote(row),
+    bookTitle: row.books?.title ?? "未知書籍",
+    bookAuthors: row.books ? authorsFromDbString(row.books.authors) : [],
   };
 }

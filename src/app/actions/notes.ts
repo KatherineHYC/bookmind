@@ -4,7 +4,14 @@ import { revalidatePath } from "next/cache";
 import { redirect, RedirectType } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { noteInputSchema, type NoteInput } from "@/lib/note-schema";
+import {
+  noteBackPath,
+  noteDetailPath,
+  parseNoteOrigin,
+  type NoteOrigin,
+} from "@/lib/note-origin";
 import { isUuid } from "@/lib/uuid";
+import type { NoteRow } from "@/types/note";
 
 const NOTES_PATH = "/notes";
 
@@ -54,4 +61,89 @@ export async function createNote(bookId: string, input: NoteInput) {
   revalidatePath(NOTES_PATH);
 
   redirect(bookDetailPath(bookId), RedirectType.replace);
+}
+
+// 更新一則筆記；成功後回到這則筆記的詳情頁
+export async function updateNote(
+  id: string,
+  origin: NoteOrigin | null,
+  input: NoteInput,
+) {
+  if (!isUuid(id)) {
+    return { error: "找不到這則筆記" };
+  }
+
+  const parsed = noteInputSchema.safeParse(input);
+  if (!parsed.success) {
+    return { error: "筆記內容格式不正確" };
+  }
+
+  const note = parsed.data;
+
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("notes")
+    .update({
+      type: note.type,
+      title: note.title,
+      excerpt: note.type === "excerpt" ? note.excerpt : null,
+      page: note.type === "excerpt" ? note.page : null,
+      content: note.content,
+    })
+    .eq("id", id)
+    .select("book_id")
+    .maybeSingle<Pick<NoteRow, "book_id">>();
+
+  if (error) {
+    console.error("更新筆記失敗：", error);
+    return { error: "儲存失敗，請稍後再試" };
+  }
+
+  if (!data) {
+    return { error: "找不到這則筆記，可能已經被刪除了" };
+  }
+
+  const safeOrigin = parseNoteOrigin(origin);
+
+  revalidatePath(NOTES_PATH);
+  revalidatePath(noteDetailPath(id));
+  revalidatePath(bookDetailPath(data.book_id));
+
+  // 編輯頁那筆瀏覽紀錄被詳情頁取代，按返回不會回到編輯頁
+  redirect(noteDetailPath(id, safeOrigin), RedirectType.replace);
+}
+
+// 刪除一則筆記；成功後回到使用者進來詳情頁之前的地方
+export async function deleteNote(id: string, origin: NoteOrigin | null) {
+  if (!isUuid(id)) {
+    return { error: "找不到這則筆記" };
+  }
+
+  const supabase = await createClient();
+
+  // delete() 後面接 select("book_id")，刪除的同時把「被刪掉的那一列」的 book_id 回傳，一趟就拿到。
+  const { data, error } = await supabase
+    .from("notes")
+    .delete()
+    .eq("id", id)
+    .select("book_id")
+    .maybeSingle<Pick<NoteRow, "book_id">>();
+
+  if (error) {
+    console.error("刪除筆記失敗：", error);
+    return { error: "刪除失敗，請稍後再試" };
+  }
+
+  if (!data) {
+    return { error: "找不到這則筆記，可能已經被刪除了" };
+  }
+
+  revalidatePath(NOTES_PATH);
+  revalidatePath(bookDetailPath(data.book_id));
+
+  redirect(
+    noteBackPath(parseNoteOrigin(origin), data.book_id),
+    RedirectType.replace,
+  );
 }

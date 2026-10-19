@@ -1,10 +1,16 @@
 import "server-only";
 
 import { createClient } from "@/lib/supabase/server";
-import { rowToNote, rowToNoteWithBook } from "@/lib/note-mapper";
+import {
+  rowToNote,
+  rowToNoteDetail,
+  rowToNoteWithBook,
+} from "@/lib/note-mapper";
 import { isUuid } from "@/lib/uuid";
 import type {
   Note,
+  NoteDetail,
+  NoteDetailRow,
   NoteRow,
   NoteWithBook,
   NoteWithBookRow,
@@ -48,4 +54,24 @@ export async function getNotesByBookId(bookId: string): Promise<Note[]> {
   }
 
   return data.map(rowToNote);
+}
+
+// 依 id 取單則筆記（含所屬書名與作者）；找不到回 null（筆記詳情頁用）
+export async function getNoteById(id: string): Promise<NoteDetail | null> {
+  if (!isUuid(id)) return null;
+
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("notes")
+    .select("*, books(title, authors)")
+    .eq("id", id)
+    .maybeSingle<NoteDetailRow>();
+
+  if (error) {
+    console.error("查詢筆記失敗：", error);
+    return null;
+  }
+
+  return data ? rowToNoteDetail(data) : null;
 }
