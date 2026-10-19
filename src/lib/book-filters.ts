@@ -1,4 +1,5 @@
 import { BookSort } from "@/types/book";
+import { isOption, pickOne, type RawSearchParams } from "@/lib/search-params";
 
 export const STATUS_FILTER_OPTIONS = [
   { value: "all", label: "全部" },
@@ -19,19 +20,6 @@ export interface BookFilters {
   status: BookStatusFilter;
   keyword: string;
   sort: BookSort;
-}
-
-type RawSearchParams = Record<string, string | string[] | undefined>;
-
-function pickOne(value: string | string[] | undefined): string {
-  return (Array.isArray(value) ? value[0] : value)?.trim() ?? "";
-}
-
-function isOption<T extends string>(
-  options: readonly { value: T }[],
-  value: string,
-): value is T {
-  return options.some((option) => option.value === value);
 }
 
 export function parseBookFilters(raw: RawSearchParams): BookFilters {
