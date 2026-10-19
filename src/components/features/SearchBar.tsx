@@ -11,6 +11,7 @@ interface SearchBarProps {
   placeholder?: string;
   className?: string;
   inputRef?: React.Ref<HTMLInputElement>;
+  onClear?: () => void;
 }
 
 export default function SearchBar({
@@ -19,6 +20,7 @@ export default function SearchBar({
   placeholder = "搜尋書名、作者或 ISBN",
   className,
   inputRef,
+  onClear,
 }: SearchBarProps) {
   const [value, setValue] = useState(defaultValue);
   const isComposingRef = useRef(false);
@@ -53,7 +55,8 @@ export default function SearchBar({
           type="button"
           onClick={() => {
             setValue("");
-            onSubmit("");
+            if (onClear) onClear();
+            else onSubmit("");
           }}
           aria-label="清除搜尋"
           className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-muted-foreground hover:text-foreground"
