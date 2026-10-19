@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { NoteType } from "@/types/note";
+import type { Note, NoteType } from "@/types/note";
 
 const NOTE_TYPES = [
   "excerpt",
@@ -9,7 +9,6 @@ const NOTE_TYPES = [
 const TITLE_MAX = 50;
 const PAGE_MAX = 9999;
 const PAGE_ERROR = `頁碼請輸入 1–${PAGE_MAX} 的數字`;
-
 
 // ── 欄位積木 ─────────────────────────────────────────────
 
@@ -96,3 +95,13 @@ export const EMPTY_NOTE_FORM: NoteFormValues = {
   excerpt: "",
   content: "",
 };
+
+export function noteToFormValues(note: Note): NoteFormValues {
+  return {
+    type: note.type,
+    page: note.page === null ? "" : String(note.page),
+    title: note.title ?? "",
+    excerpt: note.excerpt ?? "",
+    content: note.content ?? "",
+  };
+}
