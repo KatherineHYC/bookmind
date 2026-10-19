@@ -3,6 +3,7 @@ import "server-only";
 import { createClient } from "@/lib/supabase/server";
 import { rowToBookDetail, rowToBookListItem } from "@/lib/book-mapper";
 import { isUuid } from "@/lib/uuid";
+import { sanitizeKeyword } from "./sanitize-keyword";
 import type {
   BookDetail,
   BookListItem,
@@ -20,10 +21,6 @@ const SORT_COLUMN: Record<BookSort, { column: string; ascending: boolean }> = {
   oldest: { column: "created_at", ascending: true },
   title: { column: "title", ascending: true },
 };
-
-function sanitizeKeyword(keyword: string): string {
-  return keyword.replace(/[,%_()]/g, " ").trim();
-}
 
 // 藏書頁主查詢：狀態 ＋ 關鍵字 ＋ 排序自由組合
 export async function getBooks({
