@@ -114,8 +114,10 @@ export async function updateNote(
   redirect(noteDetailPath(id, safeOrigin), RedirectType.replace);
 }
 
-// 刪除一則筆記；成功後回到使用者進來詳情頁之前的地方
-export async function deleteNote(id: string, origin: NoteOrigin | null) {
+// 刪除的共同步驟：刪資料＋讓相關頁面重新抓資料。只回報結果，不負責跳頁
+async function removeNote(
+  id: string,
+): Promise<{ error: string } | { bookId: string }> {
   if (!isUuid(id)) {
     return { error: "找不到這則筆記" };
   }
@@ -142,8 +144,22 @@ export async function deleteNote(id: string, origin: NoteOrigin | null) {
   revalidatePath(NOTES_PATH);
   revalidatePath(bookDetailPath(data.book_id));
 
+  return { bookId: data.book_id };
+}
+
+// 筆記詳情頁用：刪除後離開，回到使用者進來詳情頁之前的地方
+export async function deleteNote(id: string, origin: NoteOrigin | null) {
+  const result = await removeNote(id);
+  if ("error" in result) return result;
+
   redirect(
-    noteBackPath(parseNoteOrigin(origin), data.book_id),
+    noteBackPath(parseNoteOrigin(origin), result.bookId),
     RedirectType.replace,
   );
+}
+
+// 書籍詳情頁用：刪除後留在原頁面
+export async function deleteNoteInPlace(id: string) {
+  const result = await removeNote(id);
+  if ("error" in result) return result;
 }
