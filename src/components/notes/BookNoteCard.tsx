@@ -1,5 +1,6 @@
 import Link from "next/link";
 import NoteTypeBadge from "./NoteTypeBadge";
+import NoteCardMenu from "./NoteCardMenu";
 import { formatDate } from "@/lib/format-date";
 import { noteDetailPath } from "@/lib/note-origin";
 import type { Note } from "@/types/note";
@@ -51,6 +52,7 @@ export default function BookNoteCard({ note }: { note: Note }) {
           <time dateTime={note.createdAt}>{formatDate(note.createdAt)}</time>
         </p>
       </Link>
+      <NoteCardMenu noteId={note.id} />
     </article>
   );
 }
