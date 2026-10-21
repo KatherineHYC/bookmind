@@ -12,6 +12,7 @@ import type { ReadingStatus } from "@/types/book";
 const LIBRARY_PATH = "/books";
 const ADD_BOOK_PATH = "/books/new";
 const NOTES_PATH = "/notes";
+const DASHBOARD_PATH = "/dashboard";
 
 const UNIQUE_VIOLATION = "23505";
 
@@ -72,6 +73,7 @@ export async function addBook(input: AddBookInput) {
 
   revalidatePath(LIBRARY_PATH);
   revalidatePath(ADD_BOOK_PATH);
+  revalidatePath(DASHBOARD_PATH);
   return { success: true };
 }
 
@@ -93,6 +95,7 @@ export async function deleteBook(id: string) {
 
   revalidatePath(LIBRARY_PATH);
   revalidatePath(NOTES_PATH);
+  revalidatePath(DASHBOARD_PATH);
 
   // revalidatePath 會讓「使用者正在看的這一頁」（/books/[id]）跟著重新渲染，
   // 但書已經刪掉了 → 頁面會先閃一下「找不到這本書」，前端才來得及跳走。
@@ -122,5 +125,6 @@ export async function updateBookStatus(id: string, status: ReadingStatus) {
 
   revalidatePath(LIBRARY_PATH);
   revalidatePath(bookDetailPath(id));
+  revalidatePath(DASHBOARD_PATH);
   return { success: true };
 }
