@@ -1,8 +1,10 @@
 import Link from "next/link";
-import { Plus } from "lucide-react";
+import { ArrowLeft, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import EmptyState from "@/components/features/EmptyState";
 import BookNoteCard from "./BookNoteCard";
+import SwipeGroup from "./SwipeGroup";
+import SwipeableNoteCard from "./SwipeableNoteCard";
 import type { Note } from "@/types/note";
 import spotOpenBook from "@/assets/illustrations/spot-open-book.webp";
 
@@ -57,13 +59,26 @@ export default function BookNotesSection({
           actionHref={newNoteHref}
         />
       ) : (
-        <ul className="mt-3 grid gap-3 md:grid-cols-2 md:items-start">
-          {notes.map((note) => (
-            <li key={note.id}>
-              <BookNoteCard note={note} />
-            </li>
-          ))}
-        </ul>
+        <>
+          {/* 只在觸控裝置顯示：有滑鼠的裝置用三點選單，不需要這行提示 */}
+          <p className="mt-1 flex items-center gap-1 text-xs text-muted-foreground pointer-fine:hidden">
+            <ArrowLeft className="size-3.5" aria-hidden />
+            左滑筆記可編輯或刪除
+          </p>
+
+          <SwipeGroup>
+            <ul className="mt-3 grid gap-3 md:grid-cols-2 md:items-start">
+              {notes.map((note) => (
+                <li key={note.id}>
+                  {/* 卡片內容（BookNoteCard）仍是 Server Component，只有外框負責手勢 */}
+                  <SwipeableNoteCard noteId={note.id}>
+                    <BookNoteCard note={note} />
+                  </SwipeableNoteCard>
+                </li>
+              ))}
+            </ul>
+          </SwipeGroup>
+        </>
       )}
     </section>
   );
