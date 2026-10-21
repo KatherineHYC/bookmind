@@ -9,6 +9,7 @@ import DashboardSkeleton from "@/components/home/DashboardSkeleton";
 import { getBookCount, getBooks } from "@/lib/queries/books";
 import { getNoteCount, getRecentNotes } from "@/lib/queries/notes";
 import headerHome from "@/assets/illustrations/header-home.webp";
+import decoBrush2 from "@/assets/illustrations/deco-brush-2.webp";
 import spotSearchStart from "@/assets/illustrations/spot-search-start.webp";
 
 const READING_LIMIT = 3;
@@ -57,6 +58,7 @@ export default function DashboardPage() {
         title="BookMind"
         subtitle="每一本書，都是一段旅程"
         illustration={headerHome}
+        decoration={decoBrush2}
       />
       <Container className="pb-8">
         <Suspense fallback={<DashboardSkeleton />}>
