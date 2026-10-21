@@ -14,6 +14,7 @@ import { isUuid } from "@/lib/uuid";
 import type { NoteRow } from "@/types/note";
 
 const NOTES_PATH = "/notes";
+const DASHBOARD_PATH = "/dashboard";
 
 function bookDetailPath(bookId: string) {
   return `/books/${bookId}`;
@@ -59,6 +60,7 @@ export async function createNote(bookId: string, input: NoteInput) {
 
   revalidatePath(bookDetailPath(bookId));
   revalidatePath(NOTES_PATH);
+  revalidatePath(DASHBOARD_PATH);
 
   redirect(bookDetailPath(bookId), RedirectType.replace);
 }
@@ -109,6 +111,7 @@ export async function updateNote(
   revalidatePath(NOTES_PATH);
   revalidatePath(noteDetailPath(id));
   revalidatePath(bookDetailPath(data.book_id));
+  revalidatePath(DASHBOARD_PATH);
 
   // 編輯頁那筆瀏覽紀錄被詳情頁取代，按返回不會回到編輯頁
   redirect(noteDetailPath(id, safeOrigin), RedirectType.replace);
@@ -143,6 +146,7 @@ async function removeNote(
 
   revalidatePath(NOTES_PATH);
   revalidatePath(bookDetailPath(data.book_id));
+  revalidatePath(DASHBOARD_PATH);
 
   return { bookId: data.book_id };
 }

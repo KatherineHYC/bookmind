@@ -83,6 +83,7 @@ export interface BookQuery {
   status?: ReadingStatus;
   keyword?: string;
   sort?: BookSort;
+  limit?: number;
 }
 
 // 帶關聯筆記數的原始列

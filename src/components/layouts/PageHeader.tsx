@@ -3,18 +3,20 @@ import Container from "./Container";
 import Logo from "./Logo";
 
 const ILLUSTRATION_SIZES = "(min-width: 768px) 256px, 160px";
+const DECORATION_SIZES = "(min-width: 768px) 128px, 96px";
 
 interface PageHeaderProps {
   title: string;
   subtitle?: string;
   illustration?: StaticImageData;
-  decoration?: "green" | "brown";
+  decoration?: StaticImageData;
 }
 
 export default function PageHeader({
   title,
   subtitle,
   illustration,
+  decoration,
 }: PageHeaderProps) {
   return (
     <header className="pt-8 pb-6">
@@ -31,6 +33,15 @@ export default function PageHeader({
               <p className="mt-3 whitespace-pre-line text-sm/loose text-foreground md:text-base/loose">
                 {subtitle}
               </p>
+            )}
+
+            {decoration && (
+              <Image
+                src={decoration}
+                alt=""
+                sizes={DECORATION_SIZES}
+                className="mt-4 h-auto w-24 md:w-32"
+              />
             )}
           </div>
 
