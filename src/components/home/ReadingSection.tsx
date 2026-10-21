@@ -17,7 +17,7 @@ export default function ReadingSection({ books }: { books: BookListItem[] }) {
       />
 
       {hasBooks ? (
-        <ul className="grid gap-2 md:grid-cols-2 lg:grid-cols-3">
+        <ul className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
           {books.map((book) => (
             <li key={book.id}>
               <ReadingBookItem book={book} />

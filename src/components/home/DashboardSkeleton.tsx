@@ -20,7 +20,7 @@ function SectionSkeleton() {
         <Skeleton className="h-6 w-24" />
         <Skeleton className="h-4 w-16" />
       </div>
-      <div className="grid gap-2 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: 3 }, (_, i) => (
           <ItemSkeleton key={i} />
         ))}
