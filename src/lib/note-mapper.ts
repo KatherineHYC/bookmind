@@ -5,6 +5,8 @@ import type {
   NoteDetailRow,
   NoteRow,
   NoteWithBook,
+  NoteWithBookCover,
+  NoteWithBookCoverRow,
   NoteWithBookRow,
 } from "@/types/note";
 
@@ -47,6 +49,15 @@ export function rowToNoteWithBook(row: NoteWithBookRow): NoteWithBook {
   return {
     ...rowToNote(row),
     bookTitle: row.books?.title ?? "未知書籍",
+  };
+}
+
+export function rowToNoteWithBookCover(
+  row: NoteWithBookCoverRow,
+): NoteWithBookCover {
+  return {
+    ...rowToNoteWithBook(row),
+    bookCoverUrl: row.books?.cover_url ?? null,
   };
 }
 

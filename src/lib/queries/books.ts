@@ -27,6 +27,7 @@ export async function getBooks({
   status,
   keyword,
   sort = "newest",
+  limit,
 }: BookQuery = {}): Promise<BookListItem[]> {
   const supabase = await createClient();
 
@@ -43,9 +44,13 @@ export async function getBooks({
 
   const { column, ascending } = SORT_COLUMN[sort];
 
-  const { data, error } = await query
-    .order(column, { ascending })
-    .overrideTypes<BookRowWithNoteCount[], { merge: false }>();
+  let ordered = query.order(column, { ascending });
+  if (limit) ordered = ordered.limit(limit);
+
+  const { data, error } = await ordered.overrideTypes<
+    BookRowWithNoteCount[],
+    { merge: false }
+  >();
 
   if (error) {
     console.error("查詢書籍失敗：", error);

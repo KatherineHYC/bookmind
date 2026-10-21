@@ -5,6 +5,7 @@ import {
   rowToNote,
   rowToNoteDetail,
   rowToNoteWithBook,
+  rowToNoteWithBookCover,
 } from "@/lib/note-mapper";
 import { isUuid } from "@/lib/uuid";
 import { sanitizeKeyword } from "./sanitize-keyword";
@@ -16,6 +17,8 @@ import type {
   NoteRow,
   NoteSort,
   NoteWithBook,
+  NoteWithBookCover,
+  NoteWithBookCoverRow,
   NoteWithBookRow,
 } from "@/types/note";
 
@@ -58,7 +61,44 @@ export async function getNotes({
   return data.map(rowToNoteWithBook);
 }
 
-// 目前使用者有沒有任何筆記（決定筆記主頁要不要顯示工具列與「還沒有任何筆記」）
+// 計算筆記總數；首頁統計列用
+export async function getNoteCount(): Promise<number> {
+  const supabase = await createClient();
+
+  const { count, error } = await supabase
+    .from("notes")
+    .select("*", { count: "exact", head: true });
+
+  if (error) {
+    console.error("計算筆記數量失敗：", error);
+    return 0;
+  }
+
+  return count ?? 0;
+}
+
+// 首頁「最近筆記」：最近更新的前幾則，帶書名與封面
+export async function getRecentNotes(
+  limit: number,
+): Promise<NoteWithBookCover[]> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("notes")
+    .select("*, books(title, cover_url)")
+    .order("updated_at", { ascending: false })
+    .limit(limit)
+    .overrideTypes<NoteWithBookCoverRow[], { merge: false }>();
+
+  if (error) {
+    console.error("查詢最近筆記失敗：", error);
+    return [];
+  }
+
+  return data.map(rowToNoteWithBookCover);
+}
+
+// 目前使用者有沒有任何筆記 -> 決定筆記主頁要不要顯示工具列與「還沒有任何筆記」
 export async function hasAnyNote(): Promise<boolean> {
   const supabase = await createClient();
 

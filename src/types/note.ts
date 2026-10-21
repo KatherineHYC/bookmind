@@ -59,6 +59,13 @@ export interface NoteWithBookRow extends NoteRow {
 
 export type NoteWithBook = Note & { bookTitle: string };
 
+// 首頁「最近筆記」用：除了書名，還要書的封面（DB 原始格式）
+export interface NoteWithBookCoverRow extends NoteRow {
+  books: { title: string; cover_url: string | null } | null;
+}
+
+export type NoteWithBookCover = NoteWithBook & { bookCoverUrl: string | null };
+
 // 筆記詳情頁用：嵌入所屬書籍的書名與作者（DB 原始格式）
 export interface NoteDetailRow extends NoteRow {
   books: { title: string; authors: string } | null;
