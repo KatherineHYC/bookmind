@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Noto_Serif_TC, Noto_Sans_TC } from "next/font/google";
+import AppToaster from "@/components/features/AppToaster";
 import "./globals.css";
 
 const notoSerifTC = Noto_Serif_TC({
@@ -43,7 +44,10 @@ export default function RootLayout({
       lang="zh-TW"
       className={`${notoSerifTC.variable} ${notoSansTC.variable}`}
     >
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        {children}
+        <AppToaster />
+      </body>
     </html>
   );
 }
