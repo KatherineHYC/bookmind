@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "sonner";
 import StatusBadge from "@/components/books/StatusBadge";
 import { BookGridSkeleton } from "@/components/books/BookCardSkeleton";
 import BookGrid from "@/components/books/BookGrid";
@@ -148,6 +149,18 @@ export default function DevUiClient() {
           onConfirm={() => setLastResult("已確認")}
           onCancel={() => setLastResult("已取消")}
         />
+      </Section>
+
+      <Section title="Toast">
+        <div className="flex gap-3">
+          <Button onClick={() => toast.success("已更新個人資料")}>成功</Button>
+          <Button
+            variant="destructive"
+            onClick={() => toast.error("儲存失敗，請稍後再試")}
+          >
+            失敗
+          </Button>
+        </div>
       </Section>
 
       <FAB href="/books" label="新增書籍" />
