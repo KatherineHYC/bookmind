@@ -7,12 +7,13 @@ import FocusPageHeader from "@/components/layouts/FocusPageHeader";
 import Container from "@/components/layouts/Container";
 import CopyEmailButton from "@/components/settings/CopyEmailButton";
 import { APP_VERSION, SUPPORT_EMAIL } from "@/lib/app-info";
+import { describeDevice } from "@/lib/device-label";
 import spotFeedback from "@/assets/illustrations/spot-feedback.webp";
 
 export const metadata: Metadata = { title: "問題回報 - BookMind" };
 
 // mailto 連結：主旨固定，內文先幫使用者附上版本與裝置資訊
-function buildMailto(userAgent: string) {
+function buildMailto(device: string) {
   const subject = "BookMind 問題回報";
   const body = [
     "請描述你遇到的問題或想法：",
@@ -20,14 +21,14 @@ function buildMailto(userAgent: string) {
     "",
     "──────────",
     `版本：v${APP_VERSION}`,
-    `裝置：${userAgent}`,
+    `瀏覽器：${device}`,
   ].join("\n");
 
   return `mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 
 export default async function FeedbackPage() {
-  const userAgent = (await headers()).get("user-agent") ?? "未知裝置";
+  const device = describeDevice((await headers()).get("user-agent"));
 
   return (
     <>
@@ -50,7 +51,7 @@ export default async function FeedbackPage() {
         </p>
 
         <Button
-          render={<a href={buildMailto(userAgent)} />}
+          render={<a href={buildMailto(device)} />}
           nativeButton={false}
           className="mt-8 h-12 w-full text-base"
         >
@@ -58,7 +59,7 @@ export default async function FeedbackPage() {
           寄信回報
         </Button>
         <p className="mt-3 font-sans text-xs/relaxed text-muted-foreground">
-          信中已自動附上版本與裝置資訊，
+          信中已自動附上版本與瀏覽器資訊，
           <br />
           若方便，再附上一張截圖就更好了。
         </p>
