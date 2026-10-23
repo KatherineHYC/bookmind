@@ -5,6 +5,7 @@ import ProfileCard from "@/components/settings/ProfileCard";
 import SettingsLinkList from "@/components/settings/SettingsLinkList";
 import DaysUsedCard from "@/components/settings/DaysUsedCard";
 import ExportDataCard from "@/components/settings/ExportDataCard";
+import ClearDataCard from "@/components/settings/ClearDataCard";
 import SettingsSkeleton from "@/components/settings/SettingsSkeleton";
 import { getProfile } from "@/lib/queries/profile";
 import { getAccount } from "@/lib/queries/account";
@@ -39,6 +40,10 @@ async function SettingsContent() {
 
       <div className="space-y-3">
         <ExportDataCard bookCount={bookCount} noteCount={noteCount} />
+        {/* 清除資料只給訪客；登入後資料在雲端，改由登出處理 */}
+        {account?.isAnonymous && (
+          <ClearDataCard bookCount={bookCount} noteCount={noteCount} />
+        )}
       </div>
 
       <SettingsLinkList />
