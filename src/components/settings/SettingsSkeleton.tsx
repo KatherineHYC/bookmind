@@ -1,6 +1,6 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
-// 設定頁內容的骨架：個人資料卡 ＋ 支援清單 ＋ 天數卡
+// 設定頁內容的骨架：個人資料卡 ＋ 資料備份／清除 ＋ 支援清單 ＋ 天數卡
 export default function SettingsSkeleton() {
   return (
     <div className="space-y-6">
@@ -10,6 +10,10 @@ export default function SettingsSkeleton() {
           <Skeleton className="h-5 w-24" />
           <Skeleton className="mt-2 h-3 w-40" />
         </div>
+      </div>
+      <div className="space-y-3">
+        <Skeleton className="h-36 w-full rounded-2xl" />
+        <Skeleton className="h-18 w-full rounded-2xl" />
       </div>
       <div>
         <Skeleton className="mb-2 h-4 w-20" />

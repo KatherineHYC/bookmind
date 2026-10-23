@@ -4,15 +4,24 @@ import Container from "@/components/layouts/Container";
 import ProfileCard from "@/components/settings/ProfileCard";
 import SettingsLinkList from "@/components/settings/SettingsLinkList";
 import DaysUsedCard from "@/components/settings/DaysUsedCard";
+import ExportDataCard from "@/components/settings/ExportDataCard";
+import ClearDataCard from "@/components/settings/ClearDataCard";
 import SettingsSkeleton from "@/components/settings/SettingsSkeleton";
 import { getProfile } from "@/lib/queries/profile";
 import { getAccount } from "@/lib/queries/account";
+import { getBookCount } from "@/lib/queries/books";
+import { getNoteCount } from "@/lib/queries/notes";
 import { PROFILE_DEFAULTS } from "@/lib/profile-defaults";
 import { APP_VERSION } from "@/lib/app-info";
 import headerSettings from "@/assets/illustrations/header-settings.webp";
 
 async function SettingsContent() {
-  const [profile, account] = await Promise.all([getProfile(), getAccount()]);
+  const [profile, account, bookCount, noteCount] = await Promise.all([
+    getProfile(),
+    getAccount(),
+    getBookCount(),
+    getNoteCount(),
+  ]);
 
   const { displayName, avatarKey } = profile ?? PROFILE_DEFAULTS;
 
@@ -29,7 +38,13 @@ async function SettingsContent() {
         statusText={statusText}
       />
 
-      {/* 資料備份、清除本機資料：Issue 3 加在這裡 */}
+      <div className="space-y-3">
+        <ExportDataCard bookCount={bookCount} noteCount={noteCount} />
+        {/* 清除資料只給訪客；登入後資料在雲端，改由登出處理 */}
+        {account?.isAnonymous && (
+          <ClearDataCard bookCount={bookCount} noteCount={noteCount} />
+        )}
+      </div>
 
       <SettingsLinkList />
 
