@@ -4,7 +4,6 @@ export function downloadTextFile(
   content: string,
   mimeType = "text/plain",
 ) {
-  // 再用一個看不見的 <a download> 點它一下，瀏覽器就會當成下載處理。
   const blob = new Blob([content], { type: `${mimeType};charset=utf-8` });
   const url = URL.createObjectURL(blob);
 

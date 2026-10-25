@@ -3,14 +3,11 @@ import { formatDate } from "@/lib/format-date";
 import type { ExportBook } from "@/types/export";
 import type { Note, NoteType } from "@/types/note";
 
-// 好處是最好測（丟假資料進去看輸出就好），之後想加 JSON 格式也只要再寫一支同樣形狀的函式。
-
 const NOTE_TYPE_LABEL: Record<NoteType, string> = {
   excerpt: "摘錄",
   thought: "心得",
 };
 
-// en-CA 的日期格式剛好是 YYYY-MM-DD，適合放進檔名（排序時也會照日期排）
 const fileDateFormatter = new Intl.DateTimeFormat("en-CA", {
   timeZone: "Asia/Taipei",
   year: "numeric",
