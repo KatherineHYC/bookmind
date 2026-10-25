@@ -30,8 +30,16 @@ const addBookSchema = z.object({
     .string()
     .regex(/^\d{13}$/)
     .nullable(),
-  publisher: z.string().nullable(),
-  publishedDate: z.string().nullable(),
+  publisher: z
+    .string()
+    .trim()
+    .nullable()
+    .transform((v) => (v ? v : null)),
+  publishedDate: z
+    .string()
+    .trim()
+    .nullable()
+    .transform((v) => (v ? v : null)),
   status: z.enum(READING_STATUSES),
 });
 
