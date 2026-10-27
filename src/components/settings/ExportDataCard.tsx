@@ -7,12 +7,14 @@ import spotOpenBook from "@/assets/illustrations/spot-open-book.webp";
 interface ExportDataCardProps {
   bookCount: number;
   noteCount: number;
+  isAnonymous: boolean;
 }
 
 // 資料備份卡：外框與文字是 Server Component，只有按鈕＋確認框是 Client
 export default function ExportDataCard({
   bookCount,
   noteCount,
+  isAnonymous,
 }: ExportDataCardProps) {
   return (
     <SettingsCard className="p-4">
@@ -23,9 +25,16 @@ export default function ExportDataCard({
             資料備份
           </h2>
           <p className="mt-2 text-xs/relaxed text-muted-foreground">
-            資料僅儲存於此裝置，不支援還原，
-            <br />
-            如需留存請自行匯出
+            {isAnonymous ? (
+              <>
+                資料僅儲存於此裝置，不支援還原，
+                <br />
+                如需留存請自行匯出
+              </>
+            ) : (
+              // 登入後資料跟著帳號走，匯出變成「額外再備份一份」
+              "資料已同步至雲端，也可另外匯出備份"
+            )}
           </p>
         </div>
         <Image

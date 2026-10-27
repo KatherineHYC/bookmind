@@ -7,6 +7,7 @@ import DaysUsedCard from "@/components/settings/DaysUsedCard";
 import ExportDataCard from "@/components/settings/ExportDataCard";
 import ClearDataCard from "@/components/settings/ClearDataCard";
 import SignInCard from "@/components/settings/SignInCard";
+import SignOutButton from "@/components/settings/SignOutButton";
 import AuthResultHandler from "@/components/settings/AuthResultHandler";
 import SettingsSkeleton from "@/components/settings/SettingsSkeleton";
 import { getProfile } from "@/lib/queries/profile";
@@ -31,7 +32,7 @@ async function SettingsContent({ searchParams }: SettingsPageProps) {
   const { displayName, avatarKey } = profile ?? PROFILE_DEFAULTS;
   const authResult = parseAuthResult(rawParams[AUTH_RESULT_PARAM]);
 
-  // 拿不到帳號時當訪客處理（不會出現無效的登出卡）
+  // 拿不到帳號時當訪客處理
   const isAnonymous = account?.isAnonymous ?? true;
 
   const statusText =
@@ -51,7 +52,11 @@ async function SettingsContent({ searchParams }: SettingsPageProps) {
       </div>
 
       <div className="space-y-3">
-        <ExportDataCard bookCount={bookCount} noteCount={noteCount} />
+        <ExportDataCard
+          bookCount={bookCount}
+          noteCount={noteCount}
+          isAnonymous={isAnonymous}
+        />
         {/* 清除資料只給訪客；登入後資料在雲端，改由登出處理 */}
         {isAnonymous && (
           <ClearDataCard bookCount={bookCount} noteCount={noteCount} />
@@ -62,7 +67,9 @@ async function SettingsContent({ searchParams }: SettingsPageProps) {
 
       {account && <DaysUsedCard since={account.createdAt} />}
 
-      {/* 不佔版面：只負責 Toast 與衝突確認框（對話框會渲染到 body） */}
+      {/* 登出放在頁面最後，登入後才出現 */}
+      {!isAnonymous && <SignOutButton />}
+
       <AuthResultHandler result={authResult} />
     </div>
   );
