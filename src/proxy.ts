@@ -1,4 +1,3 @@
-// @WHY middleware 沒有瀏覽器，所以必須使用 Server Client
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
@@ -15,13 +14,12 @@ export async function proxy(request: NextRequest) {
         },
 
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(
-            ({ name, value }) => request.cookies.set(name, value), // @WHY 把新的 Cookie 更新到目前的 Request。
+          cookiesToSet.forEach(({ name, value }) =>
+            request.cookies.set(name, value),
           );
-          response = NextResponse.next({ request }); // @WHY 因為 Request 改了，所以重新建立新的 Response。
-          cookiesToSet.forEach(
-            ({ name, value, options }) =>
-              response.cookies.set(name, value, options),
+          response = NextResponse.next({ request });
+          cookiesToSet.forEach(({ name, value, options }) =>
+            response.cookies.set(name, value, options),
           );
         },
       },
