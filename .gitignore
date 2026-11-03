@@ -49,3 +49,10 @@ scripts/check-private-notes-staged.mjs
 # 插圖原圖與預覽頁
 /design/illustrations-src/
 /design/illustrations-preview.html
+
+# next-pwa 在 build 時產生的 Service Worker（每次部署由 Vercel 重新產生）
+/public/sw.js
+/public/sw.js.map
+/public/swe-worker-*.js
+/public/workbox-*.js
+/public/workbox-*.js.map

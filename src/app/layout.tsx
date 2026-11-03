@@ -27,6 +27,12 @@ export const metadata: Metadata = {
   icons: {
     apple: "/apple-touch-icon.png",
   },
+  // iOS「加入主畫面」用：capable 讓它用全螢幕 App 模式開啟，title 是主畫面圖示下的名字
+  appleWebApp: {
+    capable: true,
+    title: "BookMind",
+    statusBarStyle: "default",
+  },
 };
 
 export const viewport: Viewport = {
