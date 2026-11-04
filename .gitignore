@@ -41,9 +41,6 @@ yarn-error.log*
 next-env.d.ts
 
 .vscode/*
-scripts/strip-private-notes.mjs
-scripts/install-private-notes.mjs
-scripts/check-private-notes-staged.mjs
 
 
 # 插圖原圖與預覽頁
