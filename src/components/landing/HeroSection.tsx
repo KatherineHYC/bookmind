@@ -31,7 +31,7 @@ export default function HeroSection() {
           將字裡行間的靈感記錄下來
         </h2>
 
-        <p className="mt-6 text-base/loose text-muted-foreground">
+        <p className="mt-6 text-lg/loose text-muted-foreground">
           一本書，一個想法，
           <br />
           都是你成長的養分。
