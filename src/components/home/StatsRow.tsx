@@ -49,7 +49,7 @@ export default function StatsRow({
           </span>
 
           <div className="flex min-w-0 flex-col-reverse items-center">
-            <dt className="text-xs whitespace-nowrap text-muted-foreground">
+            <dt className="font-sans text-xs whitespace-nowrap text-muted-foreground">
               {label}
             </dt>
             <dd className="text-2xl/tight font-semibold text-primary tabular-nums md:text-3xl/tight">

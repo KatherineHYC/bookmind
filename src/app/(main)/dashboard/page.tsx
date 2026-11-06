@@ -6,6 +6,7 @@ import StatsRow from "@/components/home/StatsRow";
 import ReadingSection from "@/components/home/ReadingSection";
 import RecentNotesSection from "@/components/home/RecentNotesSection";
 import DashboardSkeleton from "@/components/home/DashboardSkeleton";
+import FAB from "@/components/layouts/FAB";
 import { getBookCount, getBooks } from "@/lib/queries/books";
 import { getNoteCount, getRecentNotes } from "@/lib/queries/notes";
 import headerHome from "@/assets/illustrations/header-home.webp";
@@ -56,7 +57,7 @@ export default function DashboardPage() {
     <>
       <PageHeader
         title="BookMind"
-        subtitle="每一本書，都是一段旅程"
+        subtitle="每一本書，都是一段旅程。"
         illustration={headerHome}
         decoration={decoBrush2}
       />
@@ -64,6 +65,7 @@ export default function DashboardPage() {
         <Suspense fallback={<DashboardSkeleton />}>
           <DashboardContent />
         </Suspense>
+        <FAB href="/books/new" label="新增書籍" />
       </Container>
     </>
   );
