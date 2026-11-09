@@ -1,11 +1,12 @@
 import Link from "next/link";
 import BookCover from "@/components/books/BookCover";
+import { bookDetailPath } from "@/lib/note-origin";
 import type { BookListItem } from "@/types/book";
 
 export default function ReadingBookItem({ book }: { book: BookListItem }) {
   return (
     <Link
-      href={`/books/${book.id}`}
+      href={bookDetailPath(book.id, "home")}
       className="flex items-center gap-4 rounded-lg p-2 transition-colors outline-none hover:bg-muted/50 focus-visible:ring-3 focus-visible:ring-ring/30"
     >
       <div className="w-16 shrink-0">

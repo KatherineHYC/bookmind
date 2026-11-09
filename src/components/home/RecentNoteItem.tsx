@@ -10,7 +10,7 @@ export default function RecentNoteItem({ note }: { note: NoteWithBookCover }) {
 
   return (
     <Link
-      href={noteDetailPath(note.id)}
+      href={noteDetailPath(note.id, "home")}
       className="flex items-start gap-4 rounded-lg p-2 transition-colors outline-none hover:bg-muted/50 focus-visible:ring-3 focus-visible:ring-ring/30"
     >
       <div className="w-12 shrink-0">
