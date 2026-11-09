@@ -14,8 +14,8 @@ import headerHome from "@/assets/illustrations/header-home.webp";
 import decoBrush2 from "@/assets/illustrations/deco-brush-2.webp";
 import spotSearchStart from "@/assets/illustrations/spot-search-start.webp";
 
-const READING_LIMIT = 3;
-const RECENT_NOTE_LIMIT = 3;
+const READING_LIMIT = 4;
+const RECENT_NOTE_LIMIT = 4;
 
 async function DashboardContent() {
   const [bookCount, readingCount, noteCount, readingBooks, recentNotes] =

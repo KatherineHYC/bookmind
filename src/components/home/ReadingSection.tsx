@@ -18,8 +18,12 @@ export default function ReadingSection({ books }: { books: BookListItem[] }) {
 
       {hasBooks ? (
         <ul className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
-          {books.map((book) => (
-            <li key={book.id}>
+          {books.map((book, index) => (
+            // 第 4 筆只在平板兩欄時補滿 2×2，手機和桌機三欄都只顯示 3 筆
+            <li
+              key={book.id}
+              className={index === 3 ? "hidden md:block lg:hidden" : undefined}
+            >
               <ReadingBookItem book={book} />
             </li>
           ))}

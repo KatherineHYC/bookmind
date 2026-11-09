@@ -20,8 +20,12 @@ export default function RecentNotesSection({
 
       {hasNotes ? (
         <ul className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
-          {notes.map((note) => (
-            <li key={note.id}>
+          {notes.map((note, index) => (
+            // 第 4 筆只在平板兩欄時補滿 2×2，手機和桌機三欄都只顯示 3 筆
+            <li
+              key={note.id}
+              className={index === 3 ? "hidden md:block lg:hidden" : undefined}
+            >
               <RecentNoteItem note={note} />
             </li>
           ))}

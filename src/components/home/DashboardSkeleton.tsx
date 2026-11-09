@@ -1,8 +1,9 @@
 import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
 
-function ItemSkeleton() {
+function ItemSkeleton({ className }: { className?: string }) {
   return (
-    <div className="flex items-center gap-4 p-2">
+    <div className={cn("flex items-center gap-4 p-2", className)}>
       <Skeleton className="aspect-2/3 w-14 shrink-0 rounded-xs" />
       <div className="flex-1">
         <Skeleton className="h-4 w-3/4" />
@@ -21,8 +22,11 @@ function SectionSkeleton() {
         <Skeleton className="h-4 w-16" />
       </div>
       <div className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
-        {Array.from({ length: 3 }, (_, i) => (
-          <ItemSkeleton key={i} />
+        {Array.from({ length: 4 }, (_, i) => (
+          <ItemSkeleton
+            key={i}
+            className={i === 3 ? "hidden md:flex lg:hidden" : undefined}
+          />
         ))}
       </div>
     </div>
