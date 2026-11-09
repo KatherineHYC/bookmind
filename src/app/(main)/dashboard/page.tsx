@@ -9,6 +9,7 @@ import DashboardSkeleton from "@/components/home/DashboardSkeleton";
 import FAB from "@/components/layouts/FAB";
 import { getBookCount, getBooks } from "@/lib/queries/books";
 import { getNoteCount, getRecentNotes } from "@/lib/queries/notes";
+import { addBookPath } from "@/lib/note-origin";
 import headerHome from "@/assets/illustrations/header-home.webp";
 import decoBrush2 from "@/assets/illustrations/deco-brush-2.webp";
 import spotSearchStart from "@/assets/illustrations/spot-search-start.webp";
@@ -40,7 +41,7 @@ async function DashboardContent() {
           description="加入一本書，這裡就會出現你的閱讀進度與筆記。"
           illustration={spotSearchStart}
           actionLabel="新增書籍"
-          actionHref="/books/new"
+          actionHref={addBookPath("home")}
         />
       ) : (
         <>
@@ -65,7 +66,7 @@ export default function DashboardPage() {
         <Suspense fallback={<DashboardSkeleton />}>
           <DashboardContent />
         </Suspense>
-        <FAB href="/books/new" label="新增書籍" />
+        <FAB href={addBookPath("home")} label="新增書籍" />
       </Container>
     </>
   );
