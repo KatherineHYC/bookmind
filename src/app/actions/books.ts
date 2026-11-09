@@ -7,6 +7,12 @@ import { createClient } from "@/lib/supabase/server";
 import { authorsToDbString } from "@/lib/book-mapper";
 import { isReadingStatus, READING_STATUSES } from "@/lib/book-status";
 import { isUuid } from "@/lib/uuid";
+import {
+  bookBackPath,
+  bookDetailPath,
+  parseBookOrigin,
+  type BookOrigin,
+} from "@/lib/note-origin";
 import type { ReadingStatus } from "@/types/book";
 
 const LIBRARY_PATH = "/books";
@@ -15,10 +21,6 @@ const NOTES_PATH = "/notes";
 const DASHBOARD_PATH = "/dashboard";
 
 const UNIQUE_VIOLATION = "23505";
-
-function bookDetailPath(id: string) {
-  return `/books/${id}`;
-}
 
 // 新增書籍的輸入格式驗證
 const addBookSchema = z.object({
@@ -85,8 +87,8 @@ export async function addBook(input: AddBookInput) {
   return { success: true };
 }
 
-// 從書單刪除一本書；成功後直接導回藏書頁
-export async function deleteBook(id: string) {
+// 從書單刪除一本書；成功後導回進來書籍詳情之前的地方（藏書頁或首頁）
+export async function deleteBook(id: string, origin: BookOrigin | null) {
   if (!isUuid(id)) {
     return { error: "找不到這本書" };
   }
@@ -107,9 +109,10 @@ export async function deleteBook(id: string) {
 
   // revalidatePath 會讓「使用者正在看的這一頁」（/books/[id]）跟著重新渲染，
   // 但書已經刪掉了 → 頁面會先閃一下「找不到這本書」，前端才來得及跳走。
-  // 在這裡 redirect，伺服器這一趟回應就直接帶著 /books 的畫面回去，中間沒有空檔。
+  // 在這裡 redirect，伺服器這一趟回應就直接帶著目的頁的畫面回去，中間沒有空檔。
   // 也不能被包在 try/catch 裡（會被 catch 吃掉）。
-  redirect(LIBRARY_PATH);
+  // origin 來自前端，可被竄改，所以這裡再過一次白名單才組網址。
+  redirect(bookBackPath(parseBookOrigin(origin)));
 }
 
 // 切換閱讀狀態（想讀 / 正在閱讀 / 已完成）

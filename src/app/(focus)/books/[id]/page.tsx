@@ -6,15 +6,19 @@ import DeleteBookButton from "@/components/books/DeleteBookButton";
 import BookNotesSection from "@/components/notes/BookNotesSection";
 import { getBookById } from "@/lib/queries/books";
 import { getNotesByBookId } from "@/lib/queries/notes";
+import { bookBackPath, parseBookOrigin } from "@/lib/note-origin";
 
 interface BookDetailPageProps {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ from?: string | string[] }>;
 }
 
-export default async function BookDetailPage({ params }: BookDetailPageProps) {
-  const { id } = await params;
+export default async function BookDetailPage({
+  params,
+  searchParams,
+}: BookDetailPageProps) {
+  const [{ id }, { from }] = await Promise.all([params, searchParams]);
 
-  // 總等待時間是兩者中較慢的那個，而不是兩個相加。（兩口爐同時開火，而不是煮完湯才開始炒菜）
   const [book, notes] = await Promise.all([
     getBookById(id),
     getNotesByBookId(id),
@@ -23,16 +27,24 @@ export default async function BookDetailPage({ params }: BookDetailPageProps) {
   // 找不到書（id 不存在、亂打、或不是自己的書）→ 交給同資料夾的 not-found.tsx
   if (!book) notFound();
 
+  const origin = parseBookOrigin(from);
+
   return (
     <>
       <FocusPageHeader
         title={book.title}
-        backHref="/books"
-        action={<DeleteBookButton bookId={book.id} noteCount={notes.length} />}
+        backHref={bookBackPath(origin)}
+        action={
+          <DeleteBookButton
+            bookId={book.id}
+            noteCount={notes.length}
+            origin={origin}
+          />
+        }
       />
       <Container className="pb-8">
         <BookInfo book={book} />
-        <BookNotesSection bookId={book.id} notes={notes} />
+        <BookNotesSection bookId={book.id} notes={notes} origin={origin} />
       </Container>
     </>
   );

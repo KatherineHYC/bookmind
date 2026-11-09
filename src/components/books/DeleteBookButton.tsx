@@ -6,16 +6,19 @@ import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ConfirmDialog from "@/components/features/ConfirmDialog";
 import { deleteBook } from "@/app/actions/books";
+import type { BookOrigin } from "@/lib/note-origin";
 
 interface DeleteBookButtonProps {
   bookId: string;
   noteCount: number;
+  origin: BookOrigin | null;
 }
 
 // 右上角的垃圾桶：按下先跳確認視窗，確認後才真的刪除
 export default function DeleteBookButton({
   bookId,
   noteCount,
+  origin,
 }: DeleteBookButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -39,8 +42,8 @@ export default function DeleteBookButton({
 
     startTransition(async () => {
       try {
-        // 成功時 Server Action 會直接 redirect 到 /books，所以走得到下一行就代表失敗了
-        const result = await deleteBook(bookId);
+        // 成功時 Server Action 會直接 redirect（回 /books 或 /dashboard），所以走得到下一行就代表失敗了
+        const result = await deleteBook(bookId, origin);
         if (result?.error) setErrorMessage(result.error);
       } catch (error) {
         // 如果被這個 catch 吃掉，Next.js 就收不到「該換頁了」的訊號，還會誤顯示「連線失敗」。
