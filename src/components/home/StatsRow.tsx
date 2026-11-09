@@ -36,7 +36,7 @@ export default function StatsRow({
       {items.map(({ label, value, icon: Icon, tone }) => (
         <div
           key={label}
-          className="flex items-center justify-center gap-2 px-1 md:gap-3"
+          className="flex items-center justify-center gap-2 px-1 md:gap-4"
         >
           <span
             aria-hidden
@@ -48,11 +48,11 @@ export default function StatsRow({
             <Icon className="size-5 md:size-6" strokeWidth={1.5} />
           </span>
 
-          <div className="flex min-w-0 flex-col-reverse items-center">
-            <dt className="font-sans text-xs whitespace-nowrap text-muted-foreground">
+          <div className="flex min-w-0 flex-col-reverse items-center md:flex-row md:gap-5">
+            <dt className="font-sans text-xs whitespace-nowrap text-muted-foreground md:text-base">
               {label}
             </dt>
-            <dd className="text-2xl/tight font-semibold text-primary tabular-nums md:text-3xl/tight">
+            <dd className="text-2xl/tight font-semibold text-primary tabular-nums md:text-4xl/tight">
               {value}
             </dd>
           </div>
