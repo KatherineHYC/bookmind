@@ -5,25 +5,24 @@ import EmptyState from "@/components/features/EmptyState";
 import BookNoteCard from "./BookNoteCard";
 import SwipeGroup from "./SwipeGroup";
 import SwipeableNoteCard from "./SwipeableNoteCard";
+import { newNotePath, type BookOrigin } from "@/lib/note-origin";
 import type { Note } from "@/types/note";
 import spotOpenBook from "@/assets/illustrations/spot-open-book.webp";
-
-// 新增筆記頁的網址
-function newNotePath(bookId: string) {
-  return `/books/${bookId}/notes/new`;
-}
 
 interface BookNotesSectionProps {
   bookId: string;
   notes: Note[];
+  origin: BookOrigin | null;
 }
 
 // 書籍詳情頁的「我的筆記」區塊：標題列 ＋ 筆記列表（或空狀態）
 export default function BookNotesSection({
   bookId,
   notes,
+  origin,
 }: BookNotesSectionProps) {
-  const newNoteHref = newNotePath(bookId);
+  // 書籍詳情的來源帶給新增筆記頁，存檔或返回後回到書籍詳情時才不會遺失
+  const newNoteHref = newNotePath(bookId, origin);
 
   return (
     <section aria-labelledby="book-notes-heading" className="mt-8">
