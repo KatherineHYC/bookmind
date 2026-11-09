@@ -43,6 +43,10 @@ export function newNotePath(bookId: string, origin: BookOrigin | null = null) {
   return withOrigin(`/books/${bookId}/notes/new`, origin);
 }
 
+export function addBookPath(origin: BookOrigin | null = null) {
+  return withOrigin("/books/new", origin);
+}
+
 export function bookBackPath(origin: BookOrigin | null) {
   return origin === "home" ? DASHBOARD_PATH : LIBRARY_PATH;
 }
