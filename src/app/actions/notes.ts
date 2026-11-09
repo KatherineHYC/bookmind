@@ -5,9 +5,12 @@ import { redirect, RedirectType } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { noteInputSchema, type NoteInput } from "@/lib/note-schema";
 import {
+  bookDetailPath,
   noteBackPath,
   noteDetailPath,
+  parseBookOrigin,
   parseNoteOrigin,
+  type BookOrigin,
   type NoteOrigin,
 } from "@/lib/note-origin";
 import { isUuid } from "@/lib/uuid";
@@ -16,12 +19,12 @@ import type { NoteRow } from "@/types/note";
 const NOTES_PATH = "/notes";
 const DASHBOARD_PATH = "/dashboard";
 
-function bookDetailPath(bookId: string) {
-  return `/books/${bookId}`;
-}
-
-// 新增一則筆記；成功後回到該書的詳情頁
-export async function createNote(bookId: string, input: NoteInput) {
+// 新增一則筆記；成功後回到該書的詳情頁（保留書籍詳情的來源）
+export async function createNote(
+  bookId: string,
+  origin: BookOrigin | null,
+  input: NoteInput,
+) {
   if (!isUuid(bookId)) {
     return { error: "找不到這本書" };
   }
@@ -62,7 +65,11 @@ export async function createNote(bookId: string, input: NoteInput) {
   revalidatePath(NOTES_PATH);
   revalidatePath(DASHBOARD_PATH);
 
-  redirect(bookDetailPath(bookId), RedirectType.replace);
+  // origin 來自前端，可被竄改，所以再過一次白名單才組網址
+  redirect(
+    bookDetailPath(bookId, parseBookOrigin(origin)),
+    RedirectType.replace,
+  );
 }
 
 // 更新一則筆記；成功後回到這則筆記的詳情頁
