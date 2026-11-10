@@ -1,24 +1,26 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { Check, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import ReadingStatusPicker from "./ReadingStatusPicker";
+import AddedBookToast from "./AddedBookToast";
 import { addBook } from "@/app/actions/books";
+import { addBookPath } from "@/lib/note-origin";
 import type { Book, ReadingStatus } from "@/types/book";
+
+const LIBRARY_PATH = "/books";
 
 interface AddBookPanelProps {
   book: Book;
   isAdded: boolean;
-  onAdded?: () => void;
 }
 
-export default function AddBookPanel({
-  book,
-  isAdded,
-  onAdded,
-}: AddBookPanelProps) {
+export default function AddBookPanel({ book, isAdded }: AddBookPanelProps) {
+  const router = useRouter();
   const [status, setStatus] = useState<ReadingStatus>("want_to_read");
   const [isPending, startTransition] = useTransition();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -53,7 +55,25 @@ export default function AddBookPanel({
           return;
         }
 
-        onAdded?.();
+        // toast 掛在根 layout，先呼叫再換頁也會留在畫面上
+        toast.success(
+          <AddedBookToast title={book.title} duplicate={result.duplicate} />,
+          {
+            id: "book-added",
+            action: {
+              label: "繼續新增",
+              onClick: () => router.push(addBookPath()),
+            },
+          },
+        );
+
+        // 在 transition 裡換頁，按鈕會維持載入中直到藏書頁渲染完成
+        // 書本來就在書單中時不帶 added：它不會排在第一張，不播進場動畫
+        router.push(
+          result.duplicate
+            ? LIBRARY_PATH
+            : `${LIBRARY_PATH}?added=${result.id}`,
+        );
       } catch {
         setErrorMessage("連線失敗，請再試一次");
       }
