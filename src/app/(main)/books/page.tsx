@@ -7,6 +7,8 @@ import { BookGridSkeleton } from "@/components/books/BookCardSkeleton";
 import BookToolbar from "@/components/books/BookToolbar";
 import { getBooks } from "@/lib/queries/books";
 import { parseBookFilters, type BookFilters } from "@/lib/book-filters";
+import { pickOne } from "@/lib/search-params";
+import { isUuid } from "@/lib/uuid";
 import FAB from "@/components/layouts/FAB";
 import headerLibrary from "@/assets/illustrations/header-library.webp";
 import spotNotFound from "@/assets/illustrations/spot-not-found.webp";
@@ -16,7 +18,12 @@ interface LibraryPageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
-async function BookResults({ filters }: { filters: BookFilters }) {
+interface BookResultsProps {
+  filters: BookFilters;
+  addedId: string | null;
+}
+
+async function BookResults({ filters, addedId }: BookResultsProps) {
   const books = await getBooks({
     status: filters.status === "all" ? undefined : filters.status,
     keyword: filters.keyword || undefined,
@@ -48,13 +55,17 @@ async function BookResults({ filters }: { filters: BookFilters }) {
       <p className="mb-4 text-sm text-muted-foreground">
         共 {books.length} 本書
       </p>
-      <BookGrid books={books} />
+      <BookGrid books={books} addedId={addedId} />
     </>
   );
 }
 
 export default async function LibraryPage({ searchParams }: LibraryPageProps) {
-  const filters = parseBookFilters(await searchParams);
+  const rawParams = await searchParams;
+  const filters = parseBookFilters(rawParams);
+  // 剛新增的書 id（新增成功後帶過來），只用來決定哪張卡播進場動畫
+  const added = pickOne(rawParams.added);
+  const addedId = isUuid(added) ? added : null;
 
   const suspenseKey = `${filters.status}-${filters.keyword}-${filters.sort}`;
 
@@ -69,7 +80,7 @@ export default async function LibraryPage({ searchParams }: LibraryPageProps) {
         <BookToolbar filters={filters} />
 
         <Suspense key={suspenseKey} fallback={<BookGridSkeleton />}>
-          <BookResults filters={filters} />
+          <BookResults filters={filters} addedId={addedId} />
         </Suspense>
         <FAB href="/books/new" label="新增書籍" />
       </Container>

@@ -47,8 +47,13 @@ const addBookSchema = z.object({
 
 export type AddBookInput = z.infer<typeof addBookSchema>;
 
-// 新增一本書到使用者書單
-export async function addBook(input: AddBookInput) {
+export type AddBookResult =
+  | { error: string }
+  | { success: true; duplicate: false; id: string }
+  | { success: true; duplicate: true };
+
+// 新增一本書到使用者書單；書已在書單中時回傳 duplicate，不當成新增
+export async function addBook(input: AddBookInput): Promise<AddBookResult> {
   const parsed = addBookSchema.safeParse(input);
   if (!parsed.success) {
     return { error: "書籍資料格式不正確" };
@@ -64,17 +69,22 @@ export async function addBook(input: AddBookInput) {
     return { error: "尚未登入，請重新整理頁面" };
   }
 
-  const { error } = await supabase.from("books").insert({
-    user_id: user.id,
-    google_books_id: parsed.data.googleBooksId,
-    title: parsed.data.title,
-    authors: authorsToDbString(parsed.data.authors),
-    cover_url: parsed.data.coverUrl,
-    isbn13: parsed.data.isbn13,
-    publisher: parsed.data.publisher,
-    published_date: parsed.data.publishedDate,
-    status: parsed.data.status,
-  });
+  const { data, error } = await supabase
+    .from("books")
+    .insert({
+      user_id: user.id,
+      google_books_id: parsed.data.googleBooksId,
+      title: parsed.data.title,
+      authors: authorsToDbString(parsed.data.authors),
+      cover_url: parsed.data.coverUrl,
+      isbn13: parsed.data.isbn13,
+      publisher: parsed.data.publisher,
+      published_date: parsed.data.publishedDate,
+      status: parsed.data.status,
+    })
+    .select("id")
+    .single()
+    .overrideTypes<{ id: string }, { merge: false }>();
 
   if (error && error.code !== UNIQUE_VIOLATION) {
     console.error("新增書籍失敗：", error);
@@ -84,7 +94,12 @@ export async function addBook(input: AddBookInput) {
   revalidatePath(LIBRARY_PATH);
   revalidatePath(ADD_BOOK_PATH);
   revalidatePath(DASHBOARD_PATH);
-  return { success: true };
+
+  if (error) {
+    return { success: true, duplicate: true };
+  }
+
+  return { success: true, duplicate: false, id: data.id };
 }
 
 // 從書單刪除一本書；成功後導回進來書籍詳情之前的地方（藏書頁或首頁）
