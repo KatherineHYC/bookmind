@@ -24,6 +24,11 @@ export default function AppToaster() {
           success: "bg-primary text-primary-foreground",
           error: "bg-muted text-muted-foreground",
           icon: "shrink-0",
+          // min-w-0 讓長訊息可以在 flex 裡被壓縮，內層的 truncate 才會生效
+          content: "min-w-0 flex-1",
+          title: "min-w-0",
+          actionButton:
+            "shrink-0 cursor-pointer rounded-full bg-primary-foreground/15 px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-colors hover:bg-primary-foreground/25",
         },
       }}
     />
