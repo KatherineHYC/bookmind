@@ -48,7 +48,7 @@ export default function AddBookPanel({
           status,
         });
 
-        if (result.error) {
+        if ("error" in result) {
           setErrorMessage(result.error);
           return;
         }
