@@ -76,21 +76,22 @@ export default function ProfileForm({
       />
 
       <fieldset disabled={isPending} className="min-w-0 flex-1">
-        <Container className="pb-8 md:max-w-lg lg:max-w-lg">
-          {/* 大頭像預覽：跟著下方的選擇即時切換 */}
-          <Image
-            src={AVATARS[avatarKey].src}
-            alt=""
-            sizes="176px"
-            loading="eager"
-            className="mx-auto mt-4 size-44 rounded-full bg-muted object-cover"
-          />
+        <Container className="pb-8 md:max-w-2xl lg:max-w-2xl">
+          <div className="md:flex md:items-center md:justify-between md:gap-12 md:pt-6">
+            <Image
+              src={AVATARS[avatarKey].src}
+              alt=""
+              sizes="(min-width: 768px) 192px, 176px"
+              loading="eager"
+              className="mx-auto mt-4 size-44 shrink-0 rounded-full bg-muted object-cover md:mx-0 md:mt-0 md:size-48"
+            />
 
-          <div className="mt-8">
-            <AvatarPicker registration={register("avatarKey")} />
+            <div className="mt-8 md:mt-0">
+              <AvatarPicker registration={register("avatarKey")} />
+            </div>
           </div>
 
-          <div className="mt-8">
+          <div className="mt-8 md:mt-10">
             <label
               htmlFor="profile-display-name"
               className="text-sm font-medium"
@@ -141,11 +142,11 @@ export default function ProfileForm({
       </fieldset>
 
       <div className="sticky bottom-0 bg-linear-to-t from-background from-70% to-transparent pt-6 pb-[calc(env(safe-area-inset-bottom)+1rem)]">
-        <Container className="md:max-w-lg lg:max-w-lg">
+        <Container className="md:max-w-2xl lg:max-w-2xl">
           {serverError && (
             <p
               role="alert"
-              className="mb-3 text-center text-sm text-destructive"
+              className="mb-3 text-center text-sm text-destructive md:text-right"
             >
               {serverError}
             </p>
@@ -153,7 +154,7 @@ export default function ProfileForm({
           <Button
             type="submit"
             disabled={!isValid || isPending}
-            className="h-12 w-full text-base"
+            className="h-12 w-full text-base md:ml-auto md:flex md:w-48"
           >
             {isPending ? (
               <>

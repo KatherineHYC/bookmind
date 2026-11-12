@@ -1,4 +1,10 @@
-export type AvatarKey = "avatar-1" | "avatar-2" | "avatar-3";
+export type AvatarKey =
+  | "avatar-1"
+  | "avatar-2"
+  | "avatar-3"
+  | "avatar-4"
+  | "avatar-5"
+  | "avatar-6";
 
 // Supabase profiles 資料表的實際欄位（DB 原始格式）
 export interface ProfileRow {

@@ -9,13 +9,13 @@ interface AvatarPickerProps {
 
 export default function AvatarPicker({ registration }: AvatarPickerProps) {
   return (
-    <fieldset>
+    <fieldset className="mx-auto w-fit md:mx-0">
       <legend className="text-sm font-medium">選擇頭像</legend>
-      <div className="mt-3 flex gap-4">
+      <div className="mt-3 grid grid-cols-3 gap-x-6 gap-y-5 md:gap-x-8 md:gap-y-6">
         {AVATAR_KEYS.map((key) => (
           <label
             key={key}
-            className="relative size-20 cursor-pointer rounded-full ring-2 ring-transparent ring-offset-2 ring-offset-background transition-shadow has-checked:ring-primary has-focus-visible:ring-ring/50"
+            className="relative size-20 cursor-pointer rounded-full ring-2 ring-transparent ring-offset-2 ring-offset-background transition-shadow has-checked:ring-primary has-focus-visible:ring-ring/50 md:size-24"
           >
             <input
               type="radio"
@@ -26,7 +26,7 @@ export default function AvatarPicker({ registration }: AvatarPickerProps) {
             <Image
               src={AVATARS[key].src}
               alt={AVATARS[key].label}
-              sizes="80px"
+              sizes="(min-width: 768px) 96px, 80px"
               className="size-full rounded-full bg-muted object-cover"
             />
             <span
