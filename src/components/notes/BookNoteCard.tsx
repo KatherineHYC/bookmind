@@ -3,11 +3,13 @@ import NoteTypeBadge from "./NoteTypeBadge";
 import NoteCardMenu from "./NoteCardMenu";
 import { formatDate } from "@/lib/format-date";
 import { noteDetailPath } from "@/lib/note-origin";
+import { collapseBlankLines } from "@/lib/note-preview";
+import { cn } from "@/lib/utils";
 import type { Note } from "@/types/note";
 
 const NOTE_TEXT_CLASS = "whitespace-pre-line text-sm/7 wrap-break-word";
 
-// 書籍詳情頁的筆記卡：顯示全文、不截斷，整張可點進筆記詳情頁
+// 書籍詳情頁的筆記卡：預覽限制行數（摘錄 4、心得 2、心得型 6），整張可點進筆記詳情頁看全文
 export default function BookNoteCard({ note }: { note: Note }) {
   return (
     <article className="relative rounded-lg border border-border bg-card">
@@ -26,19 +28,32 @@ export default function BookNoteCard({ note }: { note: Note }) {
         {note.type === "excerpt" ? (
           <>
             <blockquote
-              className={`mt-2 text-card-foreground ${NOTE_TEXT_CLASS}`}
+              className={cn(
+                "mt-2 line-clamp-4 text-card-foreground",
+                NOTE_TEXT_CLASS,
+              )}
             >
-              「{note.excerpt}」
+              「{collapseBlankLines(note.excerpt)}」
             </blockquote>
             {note.content && (
-              <p className={`mt-2 text-muted-foreground ${NOTE_TEXT_CLASS}`}>
-                {note.content}
+              <p
+                className={cn(
+                  "mt-2 line-clamp-2 text-muted-foreground",
+                  NOTE_TEXT_CLASS,
+                )}
+              >
+                {collapseBlankLines(note.content)}
               </p>
             )}
           </>
         ) : (
-          <p className={`mt-2 text-card-foreground ${NOTE_TEXT_CLASS}`}>
-            {note.content}
+          <p
+            className={cn(
+              "mt-2 line-clamp-6 text-card-foreground",
+              NOTE_TEXT_CLASS,
+            )}
+          >
+            {collapseBlankLines(note.content)}
           </p>
         )}
 
