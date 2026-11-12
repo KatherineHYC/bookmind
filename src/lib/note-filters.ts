@@ -10,9 +10,9 @@ export const TYPE_FILTER_OPTIONS = [
 export type NoteTypeFilter = (typeof TYPE_FILTER_OPTIONS)[number]["value"];
 
 export const NOTE_SORT_OPTIONS = [
-  { value: "updated", label: "最新更新" },
-  { value: "newest", label: "最新建立" },
-  { value: "oldest", label: "最早建立" },
+  { value: "updated", label: "最近更新" },
+  { value: "newest", label: "最新紀錄" },
+  { value: "oldest", label: "最舊紀錄" },
 ] as const satisfies readonly { value: NoteSort; label: string }[];
 
 // 預設值集中在這裡：parse 時用、工具列判斷「要不要寫進網址」時也用
