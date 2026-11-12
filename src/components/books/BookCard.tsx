@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PenLine } from "lucide-react";
 import StatusBadge from "./StatusBadge";
 import BookCover from "./BookCover";
 import type { BookListItem } from "@/types/book";
@@ -20,8 +21,15 @@ export default function BookCard({ book }: { book: BookListItem }) {
           {book.authors.join("、") || "作者不詳"}
         </p>
 
-        <div className="mt-auto pt-2">
+        <div className="mt-auto flex items-center justify-center gap-2 pt-2">
           <StatusBadge status={book.status} />
+          {book.noteCount > 0 && (
+            <span className="flex h-5 items-center gap-0.5 text-xs text-muted-foreground">
+              <PenLine className="size-3.5" aria-hidden />
+              <span aria-hidden>{book.noteCount}</span>
+              <span className="sr-only">{book.noteCount} 則筆記</span>
+            </span>
+          )}
         </div>
       </Link>
     </article>
