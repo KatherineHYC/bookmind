@@ -1,7 +1,6 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
 // 設定頁內容的骨架：個人資料卡＋登入卡 ＋ 資料備份／清除 ＋ 支援清單 ＋ 天數卡
-// 骨架出現時還不知道是不是訪客，照最常見的訪客版面排
 export default function SettingsSkeleton() {
   return (
     <div className="space-y-6">
