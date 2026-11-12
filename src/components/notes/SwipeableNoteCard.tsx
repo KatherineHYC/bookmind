@@ -126,7 +126,7 @@ export default function SwipeableNoteCard({
   }
 
   return (
-    <div data-swipe-card className="relative overflow-hidden rounded-lg">
+    <div data-swipe-card className="relative h-full overflow-hidden rounded-lg">
       <div
         inert={!isOpen}
         style={{ width: ACTIONS_WIDTH }}
@@ -160,7 +160,7 @@ export default function SwipeableNoteCard({
         onClickCapture={handleClickCapture}
         style={{ transform: `translateX(${offset}px)` }}
         className={cn(
-          "relative touch-pan-y pointer-coarse:select-none",
+          "relative h-full touch-pan-y pointer-coarse:select-none",
           !isDragging &&
             "transition-transform duration-200 ease-out motion-reduce:transition-none",
         )}

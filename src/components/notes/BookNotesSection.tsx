@@ -66,7 +66,7 @@ export default function BookNotesSection({
           </p>
 
           <SwipeGroup>
-            <ul className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-2 md:items-start">
+            <ul className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-2">
               {notes.map((note) => (
                 <li key={note.id}>
                   {/* 卡片內容（BookNoteCard）仍是 Server Component，只有外框負責手勢 */}
