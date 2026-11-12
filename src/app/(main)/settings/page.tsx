@@ -15,7 +15,6 @@ import { getAccount } from "@/lib/queries/account";
 import { getBookCount } from "@/lib/queries/books";
 import { getNoteCount } from "@/lib/queries/notes";
 import { PROFILE_DEFAULTS } from "@/lib/profile-defaults";
-import { APP_VERSION } from "@/lib/app-info";
 import { AUTH_RESULT_PARAM, parseAuthResult } from "@/lib/auth-result";
 import type { RawSearchParams } from "@/lib/search-params";
 import headerSettings from "@/assets/illustrations/header-settings.webp";
@@ -87,9 +86,6 @@ export default function SettingsPage({ searchParams }: SettingsPageProps) {
         <Suspense fallback={<SettingsSkeleton />}>
           <SettingsContent searchParams={searchParams} />
         </Suspense>
-        <p className="mt-4 text-center text-xs text-muted-foreground">
-          目前版本 v{APP_VERSION}
-        </p>
       </Container>
     </>
   );

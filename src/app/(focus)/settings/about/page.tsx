@@ -1,17 +1,16 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { BookMarked, ExternalLink, User } from "lucide-react";
+import { BookMarked, ExternalLink } from "lucide-react";
 import GithubIcon from "@/components/features/GithubIcon";
 import FocusPageHeader from "@/components/layouts/FocusPageHeader";
 import Container from "@/components/layouts/Container";
-import { APP_VERSION, AUTHOR_URL, GITHUB_REPO_URL } from "@/lib/app-info";
+import { APP_VERSION, GITHUB_REPO_URL } from "@/lib/app-info";
 import spotAbout from "@/assets/illustrations/spot-about.webp";
 
 export const metadata: Metadata = { title: "關於 BookMind" };
 
 const EXTERNAL_LINKS = [
   { href: GITHUB_REPO_URL, label: "GitHub 原始碼", icon: GithubIcon },
-  { href: AUTHOR_URL, label: "作者", icon: User },
 ];
 
 export default function AboutPage() {
@@ -43,7 +42,7 @@ export default function AboutPage() {
         </p>
 
         <p className="mt-8 border-t border-border pt-6 text-center text-sm text-muted-foreground">
-          v{APP_VERSION}
+          目前版本 v{APP_VERSION}
         </p>
 
         <ul className="mt-4 space-y-3">

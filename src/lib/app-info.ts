@@ -4,4 +4,3 @@ export const APP_VERSION = packageJson.version;
 
 export const SUPPORT_EMAIL = "kathhyc.dev@gmail.com";
 export const GITHUB_REPO_URL = "https://github.com/KatherineHYC/bookmind";
-export const AUTHOR_URL = "https://github.com/KatherineHYC";
