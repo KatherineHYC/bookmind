@@ -11,6 +11,7 @@ import { pickOne } from "@/lib/search-params";
 import { isUuid } from "@/lib/uuid";
 import FAB from "@/components/layouts/FAB";
 import headerLibrary from "@/assets/illustrations/header-library.webp";
+import decoBrush2 from "@/assets/illustrations/deco-brush-2.webp";
 import spotNotFound from "@/assets/illustrations/spot-not-found.webp";
 import spotSearchStart from "@/assets/illustrations/spot-search-start.webp";
 
@@ -73,8 +74,9 @@ export default async function LibraryPage({ searchParams }: LibraryPageProps) {
     <>
       <PageHeader
         title="藏書"
-        subtitle="收藏與整理你的書籍，讓閱讀更有方向。"
+        subtitle={"收藏與整理你的書籍，\n讓閱讀更有方向。"}
         illustration={headerLibrary}
+        decoration={decoBrush2}
       />
       <Container className="pb-8">
         <BookToolbar filters={filters} />

@@ -18,6 +18,7 @@ import { PROFILE_DEFAULTS } from "@/lib/profile-defaults";
 import { AUTH_RESULT_PARAM, parseAuthResult } from "@/lib/auth-result";
 import type { RawSearchParams } from "@/lib/search-params";
 import headerSettings from "@/assets/illustrations/header-settings.webp";
+import decoBrush3 from "@/assets/illustrations/deco-brush-3.webp";
 
 interface SettingsPageProps {
   searchParams: Promise<RawSearchParams>;
@@ -81,6 +82,7 @@ export default function SettingsPage({ searchParams }: SettingsPageProps) {
         title="我的"
         subtitle={"管理你的偏好設定，\n以及閱讀旅程的點滴。"}
         illustration={headerSettings}
+        decoration={decoBrush3}
       />
       <Container className="pb-8">
         <Suspense fallback={<SettingsSkeleton />}>

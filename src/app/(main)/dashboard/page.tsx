@@ -11,7 +11,7 @@ import { getBookCount, getBooks } from "@/lib/queries/books";
 import { getNoteCount, getRecentNotes } from "@/lib/queries/notes";
 import { addBookPath } from "@/lib/note-origin";
 import headerHome from "@/assets/illustrations/header-home.webp";
-import decoBrush2 from "@/assets/illustrations/deco-brush-2.webp";
+import decoBrush4 from "@/assets/illustrations/deco-brush-4.webp";
 import spotSearchStart from "@/assets/illustrations/spot-search-start.webp";
 
 const READING_LIMIT = 4;
@@ -60,7 +60,7 @@ export default function DashboardPage() {
         title="BookMind"
         subtitle="每一本書，都是一段旅程。"
         illustration={headerHome}
-        decoration={decoBrush2}
+        decoration={decoBrush4}
       />
       <Container className="pb-8">
         <Suspense fallback={<DashboardSkeleton />}>

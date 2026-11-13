@@ -9,6 +9,7 @@ import { getNotes, hasAnyNote } from "@/lib/queries/notes";
 import { parseNoteFilters, type NoteFilters } from "@/lib/note-filters";
 import type { RawSearchParams } from "@/lib/search-params";
 import headerNotes from "@/assets/illustrations/header-notes.webp";
+import decoBrush1 from "@/assets/illustrations/deco-brush-1.webp";
 import spotNotFound from "@/assets/illustrations/spot-not-found.webp";
 import spotOpenBook from "@/assets/illustrations/spot-open-book.webp";
 
@@ -57,6 +58,7 @@ export default async function NotesPage({ searchParams }: NotesPageProps) {
         title="筆記"
         subtitle={"將字裡行間的靈感，\n化為日後的養分。"}
         illustration={headerNotes}
+        decoration={decoBrush1}
       />
       <Container className="pb-8">
         {hasNotes ? (
