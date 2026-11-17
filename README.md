@@ -4,9 +4,11 @@
     <img width="320" src="docs/images/logo-light.png" alt="BookMind">
   </picture>
 
-#### 將字裡行間的靈感記錄下來 —— 一個管理藏書與閱讀筆記的 PWA
+#### 將字裡行間的靈感記錄下來 —— 
+#### 一個管理藏書與閱讀筆記的 PWA。
+免註冊，點開就能用！
 
-**[👀 線上體驗：bookmind-notes.vercel.app](https://bookmind-notes.vercel.app)**　免註冊，點開就能用
+**[👀 線上體驗：bookmind-notes.vercel.app](https://bookmind-notes.vercel.app)**　
 
 </div>
 
