@@ -38,7 +38,7 @@ export default function HeroSection() {
         </p>
 
         <Button
-          render={<Link href="/dashboard" />}
+          render={<Link href="/dashboard" prefetch={false} />}
           nativeButton={false}
           size="lg"
           className="mt-8 h-12 px-10 text-sm"

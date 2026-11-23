@@ -52,7 +52,7 @@ export async function proxy(request: NextRequest) {
   return response;
 }
 
-// 同時符合三個條件才建立匿名帳號，避免重複建立、或把既有帳號的 cookie 蓋掉
+// 同時符合兩個條件才建立匿名帳號，避免重複建立、或把既有帳號的 cookie 蓋掉
 function shouldCreateAnonymousUser(
   request: NextRequest,
   error: AuthError | null,
@@ -67,10 +67,7 @@ function shouldCreateAnonymousUser(
     return false;
   }
 
-  // 2. 背景預先載入的請求不建帳號，等使用者真的進入頁面那一次再建
-  if (request.headers.get("next-router-prefetch")) return false;
-
-  // 3. 只有 app 頁面需要帳號；首頁、法律頁、不存在的網址都不建
+  // 2. 只有 app 頁面需要帳號；首頁、法律頁、不存在的網址都不建
   const { pathname } = request.nextUrl;
   if (PUBLIC_PATHS.includes(pathname)) return false;
 
